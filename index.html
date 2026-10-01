@@ -1,0 +1,1897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CertManager Pro v7.1 — Escola Europea</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ─── RESET & BASE ─────────────────────────────────────────── */
+*{margin:0;padding:0;box-sizing:border-box}
+html{font-size:14px}
+body{font-family:'Inter',sans-serif;background:#f9fafb;color:#111827;min-height:100vh}
+#app{min-height:100vh;display:flex;flex-direction:column}
+/* ─── LOGIN ──────────────────────────────────────────────── */
+#loginScreen{flex:1;display:flex;align-items:center;justify-content:center;padding:2rem}
+.login-card{background:#fff;border-radius:16px;padding:3rem 2.5rem;width:100%;max-width:420px;box-shadow:0 4px 20px rgba(0,0,0,.08);text-align:center}
+.login-brand{display:flex;align-items:center;justify-content:center;gap:.6rem;margin-bottom:2rem}
+.login-brand .icon{width:48px;height:48px;background:#1e3a8a;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem}
+.login-brand .school-name{font-size:.65rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#6b7280;line-height:1}
+.login-brand .sys-name{font-size:1rem;font-weight:700;color:#111827;line-height:1.3}
+.login-label{font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#6b7280;margin-bottom:1rem}
+.pin-row{display:flex;gap:.75rem;justify-content:center;margin-bottom:1.75rem}
+.pin-d{width:60px;height:68px;font-size:2rem;font-weight:700;font-family:monospace;text-align:center;background:#fff;border:2px solid #e5e7eb;border-radius:12px;color:#111827;outline:none;transition:all .2s}
+.pin-d:focus{border-color:#1e3a8a;box-shadow:0 0 0 4px rgba(30,58,138,.1)}
+.btn-login{width:100%;padding:1rem;background:#1e3a8a;color:#fff;border:none;border-radius:12px;font-family:inherit;font-size:.95rem;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-login:hover{background:#1e40af}
+.btn-login:disabled{opacity:.5;cursor:not-allowed}
+.login-err{display:none;background:#fee2e2;border:1px solid #fca5a5;color:#991b1b;border-radius:8px;padding:.75rem 1rem;font-size:.82rem;margin-top:1rem}
+.login-err.show{display:block}
+/* ─── MAIN APP ───────────────────────────────────────────── */
+#mainApp{display:none;flex:1}
+#mainApp.active{display:flex;flex-direction:column}
+.topbar{min-height:58px;background:#fff;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;padding:.5rem 1.75rem;gap:.75rem;flex-wrap:wrap}
+.topbar-logo{display:flex;align-items:center;gap:.6rem}
+.t-icon{width:32px;height:32px;background:#1e3a8a;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.t-brand{font-size:.8rem;font-weight:700;color:#111827}
+.t-sub{font-size:.65rem;color:#6b7280;display:block}
+.topbar-nav{display:flex;gap:.25rem;margin-left:1.5rem;flex-wrap:wrap}
+.nav-btn{padding:.4rem .85rem;background:transparent;border:none;border-radius:8px;color:#6b7280;font-family:inherit;font-size:.8rem;font-weight:600;cursor:pointer;transition:all .18s}
+.nav-btn:hover,.nav-btn.active{background:#f3f4f6;color:#111827}
+.user-chip{display:flex;align-items:center;gap:.5rem;background:#f3f4f6;border-radius:20px;padding:.3rem .7rem .3rem .4rem}
+.user-avatar{width:26px;height:26px;background:#1e3a8a;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:#fff}
+.user-code{font-size:.75rem;font-weight:600;color:#111827}
+.btn-logout{background:#fee2e2;border:1px solid #fca5a5;color:#991b1b;border-radius:8px;padding:.3rem .7rem;font-size:.75rem;font-weight:600;cursor:pointer;transition:all .18s}
+.btn-logout:hover{background:#fecaca}
+.content{flex:1;padding:1.75rem;max-width:1400px;margin:0 auto;width:100%}
+@media(max-width:640px){.content{padding:1rem}.topbar{padding:.5rem 1rem}.topbar-nav{margin-left:0}}
+.view{display:none}
+.view.active{display:block}
+.page-head{margin-bottom:1.5rem}
+.page-head h2{font-size:1.4rem;font-weight:800;color:#111827;margin-bottom:.2rem}
+.page-head p{font-size:.82rem;color:#6b7280}
+/* ─── STATS CARDS ───────────────────────────────────────── */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.75rem}
+@media(max-width:900px){.stats-row{grid-template-columns:repeat(2,1fr)}}
+.stat-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:1.25rem;transition:all .2s}
+.stat-card:hover{border-color:#d1d5db;box-shadow:0 4px 12px rgba(0,0,0,.05)}
+.stat-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.75rem}
+.stat-label{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:#6b7280}
+.stat-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.stat-icon.blue{background:#dbeafe;color:#1e40af}
+.stat-icon.cyan{background:#cffafe;color:#0e7490}
+.stat-icon.green{background:#d1fae5;color:#065f46}
+.stat-icon.amber{background:#fef3c7;color:#92400e}
+.stat-val{font-size:2rem;font-weight:800;color:#111827;line-height:1;font-family:monospace}
+.stat-sub{font-size:.72rem;color:#6b7280;margin-top:.3rem}
+.section-title{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#6b7280;margin-bottom:.9rem}
+.actions-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.75rem}
+@media(max-width:900px){.actions-grid{grid-template-columns:repeat(2,1fr)}}
+.action-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:1.5rem;cursor:pointer;transition:all .22s;display:flex;flex-direction:column;gap:.75rem}
+.action-card:hover{border-color:#1e3a8a;box-shadow:0 4px 16px rgba(30,58,138,.1)}
+.ac-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem}
+.ac-icon.blue{background:#dbeafe;color:#1e40af}
+.ac-icon.cyan{background:#cffafe;color:#0e7490}
+.ac-icon.amber{background:#fef3c7;color:#92400e}
+.ac-icon.red{background:#fee2e2;color:#991b1b}
+.ac-title{font-size:.95rem;font-weight:700;color:#111827}
+.ac-desc{font-size:.78rem;color:#6b7280;line-height:1.5}
+/* ─── PANEL / TABLE ──────────────────────────────────────── */
+.panel{background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden}
+.panel-head{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.2rem;border-bottom:1px solid #e5e7eb}
+.panel-head h3{font-size:.85rem;font-weight:700;color:#111827}
+.badge-count{background:#f3f4f6;border:1px solid #e5e7eb;color:#6b7280;border-radius:20px;padding:.2rem .6rem;font-size:.7rem;font-weight:600}
+table{width:100%;border-collapse:collapse}
+thead th{padding:.65rem 1rem;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#6b7280;text-align:left;background:#f9fafb;border-bottom:1px solid #e5e7eb}
+tbody td{padding:.7rem 1rem;font-size:.82rem;color:#111827;border-bottom:1px solid #e5e7eb}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:#f9fafb}
+.td-code{font-family:monospace;font-size:.75rem;color:#1e3a8a}
+.td-name{font-weight:600}
+.td-email{color:#6b7280;font-size:.78rem}
+.badge-pill{display:inline-flex;align-items:center;gap:.3rem;padding:.2rem .55rem;border-radius:20px;font-size:.68rem;font-weight:700;white-space:nowrap}
+.pill-std{background:#dbeafe;color:#1e40af}
+.pill-test{background:#fef3c7;color:#92400e}
+/* ─── GENERATE TABS ────────────────────────────────────────── */
+.gen-tabs{display:flex;gap:.5rem;margin-bottom:1.5rem;background:#f3f4f6;border-radius:12px;padding:.35rem;width:fit-content;flex-wrap:wrap}
+.gen-tab{padding:.5rem 1.2rem;border-radius:8px;background:transparent;border:none;color:#6b7280;font-family:inherit;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .18s}
+.gen-tab.active{background:#fff;color:#111827;box-shadow:0 2px 4px rgba(0,0,0,.05)}
+.gen-tab:not(.active):hover{color:#111827}
+.gen-panel{display:none}
+.gen-panel.active{display:block}
+/* ─── FORMS ───────────────────────────────────────────────── */
+.form-card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:1.75rem;max-width:800px}
+.form-section{margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid #e5e7eb}
+.form-section:last-of-type{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.form-section-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#6b7280;margin-bottom:1rem;display:flex;align-items:center;gap:.4rem}
+.form-section-title::before{content:'';display:block;width:3px;height:14px;background:#1e3a8a;border-radius:2px}
+.fg{margin-bottom:1.1rem}
+.fg label{display:block;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#6b7280;margin-bottom:.45rem}
+.fg label.req::after{content:' *';color:#ef4444}
+.fg input,.fg select,.fg textarea{width:100%;padding:.65rem .9rem;background:#fff;border:1px solid #e5e7eb;border-radius:8px;color:#111827;font-family:inherit;font-size:.88rem;outline:none;transition:all .18s}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:#1e3a8a;box-shadow:0 0 0 3px rgba(30,58,138,.1)}
+.fg input.invalid,.fg select.invalid{border-color:#ef4444;box-shadow:0 0 0 3px rgba(239,68,68,.1)}
+.fg textarea{resize:vertical;min-height:80px}
+.fg-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.fg-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+@media(max-width:640px){.fg-row,.fg-row-3{grid-template-columns:1fr}}
+.check-row{display:flex;align-items:center;gap:.6rem;padding:.7rem .9rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;margin-bottom:1.1rem}
+.check-row input[type=checkbox]{width:16px;height:16px;cursor:pointer}
+.check-row label{font-size:.82rem;font-weight:500;color:#111827;cursor:pointer;margin:0;text-transform:none;letter-spacing:0}
+.check-row.test-mode{background:#fffbeb;border-color:#fcd34d}
+.check-row.test-mode label{color:#92400e}
+.radio-group{display:flex;flex-direction:column;gap:.75rem;margin-bottom:1.1rem;padding:1rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px}
+.radio-opt{display:flex;align-items:center;gap:.6rem}
+.radio-opt input[type=radio]{width:16px;height:16px;cursor:pointer}
+.radio-opt label{font-size:.85rem;font-weight:500;color:#111827;cursor:pointer;margin:0}
+.radio-opt-sub{margin-left:1.8rem;margin-top:.5rem}
+.opt-hint{font-weight:400;text-transform:none;letter-spacing:0}
+/* ─── BUTTONS ─────────────────────────────────────────────── */
+.btn{padding:.7rem 1.4rem;border:none;border-radius:8px;font-family:inherit;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .18s;display:inline-flex;align-items:center;justify-content:center;gap:.4rem}
+.btn-primary{background:#1e3a8a;color:#fff}
+.btn-primary:hover{background:#1e40af}
+.btn-success{background:#10b981;color:#fff}
+.btn-success:hover{background:#059669}
+.btn-ghost{background:#f3f4f6;border:1px solid #e5e7eb;color:#111827}
+.btn-ghost:hover{background:#e5e7eb}
+.btn-danger{background:#dc2626;color:#fff}
+.btn-danger:hover{background:#b91c1c}
+.btn-warning{background:#f59e0b;color:#fff}
+.btn-warning:hover{background:#d97706}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+/* ─── ALERTS ──────────────────────────────────────────────── */
+.alert-box{display:none;border-radius:8px;padding:.8rem 1rem;font-size:.82rem;margin-bottom:1rem;line-height:1.5}
+.alert-box.show{display:block}
+.alert-box.ok{background:#d1fae5;border:1px solid #10b981;color:#065f46}
+.alert-box.err{background:#fee2e2;border:1px solid #ef4444;color:#991b1b}
+.alert-box.warn{background:#fffbeb;border:1px solid #f59e0b;color:#92400e}
+/* ─── UPLOAD ZONE ─────────────────────────────────────────── */
+.upload-zone{border:2px dashed #d1d5db;border-radius:12px;padding:2.5rem;text-align:center;cursor:pointer;transition:all .2s;background:#f9fafb}
+.upload-zone:hover,.upload-zone.drag{border-color:#1e3a8a;background:#f3f4f6}
+.uz-icon{font-size:2.5rem;margin-bottom:.75rem;opacity:.5}
+.uz-text{font-size:.88rem;color:#6b7280}
+.uz-text strong{color:#111827}
+.uz-file{margin-top:.5rem;font-size:.78rem;color:#1e3a8a;font-weight:600}
+.preview-wrap{display:none;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;margin-top:1rem}
+.preview-wrap.show{display:block}
+.info-note{font-size:.78rem;color:#6b7280;margin-bottom:1rem;background:#f9fafb;padding:.6rem .9rem;border-radius:6px;border:1px solid #e5e7eb}
+/* ─── CSV VALIDATION ──────────────────────────────────────── */
+.csv-validation{background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:1rem;margin:1rem 0;font-size:.82rem}
+.csv-val-ok{border-color:#10b981;background:#d1fae5;color:#065f46}
+.csv-val-err{border-color:#ef4444;background:#fee2e2;color:#991b1b}
+.csv-val-warn{border-color:#f59e0b;background:#fffbeb;color:#92400e}
+.csv-mapping{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.5rem}
+.csv-tag{display:inline-flex;align-items:center;gap:.3rem;padding:.2rem .5rem;border-radius:6px;font-size:.68rem;font-weight:600}
+.csv-tag-ok{background:#dbeafe;color:#1e40af}
+.csv-tag-miss{background:#fee2e2;color:#991b1b}
+.csv-tag-unk{background:#f3f4f6;color:#6b7280}
+.row-issues{margin-top:.75rem;font-size:.78rem}
+.err-detail{max-height:200px;overflow-y:auto;margin-top:.75rem;padding:.75rem;background:#fff;border:1px solid #fca5a5;border-radius:8px;font-size:.78rem;color:#991b1b;font-family:monospace;white-space:pre-wrap;line-height:1.6}
+/* ─── VERIFY ──────────────────────────────────────────────── */
+.verify-layout{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+@media(max-width:800px){.verify-layout{grid-template-columns:1fr}}
+.verify-input-card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:1.75rem}
+.verify-input-card h3{font-size:1rem;font-weight:700;margin-bottom:.3rem}
+.verify-input-card p{font-size:.8rem;color:#6b7280;margin-bottom:1.5rem}
+.code-input-big{width:100%;padding:.85rem 1.1rem;background:#fff;border:2px solid #e5e7eb;border-radius:12px;color:#1e3a8a;font-family:monospace;font-size:1rem;font-weight:600;letter-spacing:.06em;outline:none;transition:all .2s;margin-bottom:1rem;text-transform:uppercase}
+.code-input-big:focus{border-color:#1e3a8a;box-shadow:0 0 0 3px rgba(30,58,138,.1)}
+.verify-result{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:1.75rem;min-height:260px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.verify-result > div{width:100%}
+.vr-empty{color:#9ca3af;font-size:.9rem}
+.vr-badge-ok{display:inline-flex;align-items:center;gap:.4rem;padding:.45rem 1rem;border-radius:20px;background:#d1fae5;border:1px solid #10b981;color:#065f46;font-size:.8rem;font-weight:700;margin-bottom:1rem}
+.vr-badge-err{display:inline-flex;align-items:center;gap:.4rem;padding:.45rem 1rem;border-radius:20px;background:#fee2e2;border:1px solid #ef4444;color:#991b1b;font-size:.8rem;font-weight:700;margin-bottom:1rem}
+.vr-badge-test{display:inline-flex;align-items:center;gap:.4rem;padding:.45rem 1rem;border-radius:20px;background:#fef3c7;border:1px solid #fcd34d;color:#92400e;font-size:.8rem;font-weight:700;margin-bottom:1rem}
+.vr-code{font-family:monospace;font-size:.9rem;font-weight:600;color:#1e3a8a;background:#dbeafe;border:1px solid #93c5fd;padding:.45rem 1rem;border-radius:8px;margin-bottom:1.25rem;letter-spacing:.06em;display:inline-block;word-break:break-all}
+.vr-detail{width:100%;text-align:left}
+.vr-row{display:flex;justify-content:space-between;gap:1rem;padding:.5rem 0;border-bottom:1px solid #e5e7eb}
+.vr-row:last-child{border-bottom:none}
+.vr-key{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#6b7280}
+.vr-val{font-size:.82rem;color:#111827;text-align:right}
+/* ─── STATISTICS ──────────────────────────────────────────── */
+.filter-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:1.5rem;margin-bottom:1.5rem}
+.filter-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1rem}
+@media(max-width:700px){.filter-row{grid-template-columns:1fr}}
+.filter-actions{display:flex;gap:.75rem;flex-wrap:wrap}
+.stats-results{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:1.5rem;margin-bottom:1.5rem}
+.export-bar{display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;margin-top:1rem;padding-top:1rem;border-top:1px solid #e5e7eb}
+.agg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem}
+@media(max-width:900px){.agg-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.agg-grid{grid-template-columns:1fr}}
+.agg-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:1.25rem}
+.agg-title{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#6b7280;margin-bottom:.75rem}
+.agg-bar{display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem}
+.agg-label{font-size:.78rem;color:#111827;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.agg-track{flex:2;height:8px;background:#f3f4f6;border-radius:4px;overflow:hidden}
+.agg-fill{height:100%;background:#1e3a8a;border-radius:4px;transition:width .3s}
+.agg-count{font-size:.72rem;font-weight:700;color:#6b7280;min-width:2rem;text-align:right}
+.quality-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:1.25rem;margin-bottom:1.5rem}
+.quality-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+@media(max-width:700px){.quality-grid{grid-template-columns:repeat(2,1fr)}}
+.quality-kpi{text-align:center;padding:.75rem;background:#f9fafb;border-radius:8px}
+.quality-kpi-val{font-size:1.6rem;font-weight:800;font-family:monospace}
+.quality-kpi-val.green{color:#065f46}
+.quality-kpi-val.amber{color:#92400e}
+.quality-kpi-val.red{color:#991b1b}
+.quality-kpi-label{font-size:.68rem;color:#6b7280;margin-top:.2rem}
+.dup-table td,.dup-table th{padding:.4rem .6rem;font-size:.75rem}
+/* ─── REPORT ──────────────────────────────────────────────── */
+.report-card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:1.75rem;max-width:680px}
+.report-note{background:#fffbeb;border:1px solid #fcd34d;border-radius:10px;padding:1rem 1.2rem;font-size:.82rem;color:#78350f;margin-top:1.25rem;line-height:1.6}
+.report-note strong{display:block;margin-bottom:.3rem}
+/* ─── TEST BANNER ─────────────────────────────────────────── */
+.test-banner{background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:.7rem 1rem;font-size:.8rem;font-weight:700;color:#92400e;margin-bottom:1rem;display:none}
+.test-banner.show{display:flex;align-items:center;gap:.5rem}
+/* ─── LOADER ──────────────────────────────────────────────── */
+#loader{display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.5);align-items:center;justify-content:center;flex-direction:column;gap:1rem}
+#loader.on{display:flex}
+.spin{width:44px;height:44px;border:4px solid #e5e7eb;border-top-color:#1e3a8a;border-radius:50%;animation:spin .75s linear infinite}
+.load-txt{font-size:.85rem;font-weight:600;color:#fff;text-align:center;padding:0 1rem}
+.load-bar{width:240px;height:6px;background:rgba(255,255,255,.25);border-radius:3px;overflow:hidden;display:none}
+.load-bar.on{display:block}
+.load-bar > div{height:100%;background:#10b981;width:0;transition:width .3s}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div id="loader">
+  <div class="spin"></div>
+  <div class="load-txt" id="loadTxt">Processing…</div>
+  <div class="load-bar" id="loadBar"><div id="loadBarFill"></div></div>
+</div>
+
+<div id="app">
+<!-- ══ LOGIN ══════════════════════════════════════════════════════════════ -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="icon">🎓</div>
+      <div>
+        <div class="school-name">Escola Europea Intermodal Transport</div>
+        <div class="sys-name">CertManager Pro v7.1</div>
+      </div>
+    </div>
+    <div class="login-label">Enter your access code</div>
+    <div class="pin-row">
+      <input class="pin-d" type="password" maxlength="1" id="p0" inputmode="numeric" autocomplete="off" aria-label="Digit 1">
+      <input class="pin-d" type="password" maxlength="1" id="p1" inputmode="numeric" autocomplete="off" aria-label="Digit 2">
+      <input class="pin-d" type="password" maxlength="1" id="p2" inputmode="numeric" autocomplete="off" aria-label="Digit 3">
+      <input class="pin-d" type="password" maxlength="1" id="p3" inputmode="numeric" autocomplete="off" aria-label="Digit 4">
+    </div>
+    <button class="btn-login" id="loginBtn" onclick="doLogin()">Access System →</button>
+    <div class="login-err" id="loginErr"></div>
+  </div>
+</div>
+
+<!-- ══ MAIN APP ══════════════════════════════════════════════════════════ -->
+<div id="mainApp">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+      <div class="topbar-logo">
+        <div class="t-icon">🎓</div>
+        <div><span class="t-brand">CertManager Pro v7.1</span><span class="t-sub">Escola Europea</span></div>
+      </div>
+      <nav class="topbar-nav">
+        <button class="nav-btn active" id="nav-dashboard"  onclick="showView('dashboard')">Dashboard</button>
+        <button class="nav-btn"        id="nav-generate"   onclick="showView('generate')">Generate</button>
+        <button class="nav-btn"        id="nav-statistics" onclick="showView('statistics')">Statistics</button>
+        <button class="nav-btn"        id="nav-verify"     onclick="showView('verify')">Verify</button>
+        <button class="nav-btn"        id="nav-report"     onclick="showView('report')">Report</button>
+      </nav>
+    </div>
+    <div style="display:flex;align-items:center;gap:.75rem">
+      <div class="user-chip">
+        <div class="user-avatar">👤</div>
+        <span class="user-code" id="uCode">–</span>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="content">
+  <!-- ══ DASHBOARD ═══════════════════════════════════════════════════════ -->
+  <div class="view active" id="view-dashboard">
+    <div class="page-head">
+      <h2>Dashboard</h2>
+      <p>Certificate management overview</p>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-top"><span class="stat-label">Total Certificates</span><div class="stat-icon blue">📜</div></div>
+        <div class="stat-val" id="s-total">–</div><div class="stat-sub">all time</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-top"><span class="stat-label">This Month</span><div class="stat-icon cyan">📅</div></div>
+        <div class="stat-val" id="s-month">–</div><div class="stat-sub">issued</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-top"><span class="stat-label">Templates</span><div class="stat-icon green">🗂</div></div>
+        <div class="stat-val" id="s-templ">–</div><div class="stat-sub">available</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-top"><span class="stat-label">Users</span><div class="stat-icon amber">👤</div></div>
+        <div class="stat-val" id="s-users">–</div><div class="stat-sub">active codes</div>
+      </div>
+    </div>
+    <div class="section-title">Quick Actions</div>
+    <div class="actions-grid">
+      <div class="action-card" onclick="showView('generate');setTab('single')">
+        <div class="ac-icon blue">📝</div>
+        <div><div class="ac-title">Single Certificate</div><div class="ac-desc">Generate one certificate manually with all participant fields.</div></div>
+      </div>
+      <div class="action-card" onclick="showView('generate');setTab('bulk')">
+        <div class="ac-icon cyan">📂</div>
+        <div><div class="ac-title">Bulk Upload</div><div class="ac-desc">CSV import with multi-language header detection.</div></div>
+      </div>
+      <div class="action-card" onclick="showView('generate');setTab('preprinted-csv')">
+        <div class="ac-icon amber">🖨️</div>
+        <div><div class="ac-title">Preprinted (CSV)</div><div class="ac-desc">Generate save &amp; print versions for physical templates.</div></div>
+      </div>
+      <div class="action-card" onclick="showView('report')">
+        <div class="ac-icon red">⚠️</div>
+        <div><div class="ac-title">Report</div><div class="ac-desc">Request destruction or correction of a certificate.</div></div>
+      </div>
+    </div>
+    <div class="section-title">Recent Certificates</div>
+    <div class="panel">
+      <div class="panel-head">
+        <h3>Latest Issued</h3>
+        <span class="badge-count" id="recentCount">–</span>
+      </div>
+      <div style="overflow-x:auto">
+        <table>
+          <thead><tr><th>Code</th><th>Name</th><th>Email</th><th>Course</th><th>Project</th><th>Alumni</th><th>Date</th><th>Type</th></tr></thead>
+          <tbody id="recentTbody">
+            <tr><td colspan="8" style="text-align:center;padding:2rem;color:#9ca3af">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ GENERATE ════════════════════════════════════════════════════════ -->
+  <div class="view" id="view-generate">
+    <div class="page-head">
+      <h2>Generate Certificates</h2>
+      <p>Issue certificates in single, bulk, or pre-printed mode</p>
+    </div>
+    <div class="gen-tabs">
+      <button class="gen-tab active"  id="tab-single"         onclick="setTab('single')">📝 Single</button>
+      <button class="gen-tab"         id="tab-bulk"           onclick="setTab('bulk')">📂 Bulk</button>
+      <button class="gen-tab"         id="tab-preprinted-csv" onclick="setTab('preprinted-csv')">🖨️ Preprinted (CSV)</button>
+    </div>
+
+    <!-- SINGLE ─────────────────────────────────────────────────────────── -->
+    <div class="gen-panel active" id="panel-single">
+      <div class="form-card" style="max-width:820px">
+        <div class="test-banner" id="testBannerSingle">⚠️ TEST MODE — Certificate will be marked as TEST and not officially issued</div>
+        <div class="alert-box" id="a-single"></div>
+        <div class="check-row test-mode" style="margin-bottom:1.5rem">
+          <input type="checkbox" id="s-testmode" onchange="toggleTestBanner('single',this.checked)">
+          <label for="s-testmode">🧪 Test mode (preview only — will NOT be officially issued)</label>
+        </div>
+
+        <!-- Section: Participant -->
+        <div class="form-section">
+          <div class="form-section-title">👤 Participant</div>
+          <div class="fg-row">
+            <div class="fg"><label class="req" for="s-name">First Name</label>
+              <input type="text" id="s-name" placeholder="e.g. María"></div>
+            <div class="fg"><label for="s-lastname">Last Name</label>
+              <input type="text" id="s-lastname" placeholder="e.g. García López"></div>
+          </div>
+          <div class="fg-row">
+            <div class="fg"><label class="req" for="s-email">Email</label>
+              <input type="email" id="s-email" placeholder="student@email.com"></div>
+            <div class="fg"><label for="s-phone">Phone (Mobile)</label>
+              <input type="tel" id="s-phone" placeholder="34 600 123 456"></div>
+          </div>
+          <div class="fg-row">
+            <div class="fg"><label for="s-gender">Gender</label>
+              <select id="s-gender">
+                <option value="">— Select —</option>
+                <option value="M">M (Male)</option>
+                <option value="F">F (Female)</option>
+              </select></div>
+            <div class="fg"><label for="s-birthdate">Birth Date</label>
+              <input type="date" id="s-birthdate"></div>
+          </div>
+          <div class="fg-row">
+            <div class="fg"><label for="s-dni">DNI / ID</label>
+              <input type="text" id="s-dni" placeholder="12345678A"></div>
+            <div class="fg"><label for="s-country">Country</label>
+              <input type="text" id="s-country" placeholder="Spain" list="country-list">
+              <datalist id="country-list"></datalist></div>
+          </div>
+        </div>
+
+        <!-- Section: Academic Profile -->
+        <div class="form-section">
+          <div class="form-section-title">🎓 Academic Profile</div>
+          <div class="fg-row">
+            <div class="fg"><label for="s-alumni">Alumni Type</label>
+              <select id="s-alumni" data-options="alumni"><option value="">— Select —</option></select></div>
+            <div class="fg"><label for="s-project">Project / Course Type</label>
+              <select id="s-project" data-options="project"><option value="">— Select —</option></select></div>
+          </div>
+          <div class="fg-row">
+            <div class="fg"><label for="s-unicompany">University / Company</label>
+              <input type="text" id="s-unicompany" placeholder="e.g. Universitat Politècnica"></div>
+            <div class="fg"><label for="s-studies">Studies Type</label>
+              <input type="text" id="s-studies" placeholder="e.g. Ingeniería Industrial"></div>
+          </div>
+          <div class="fg-row">
+            <div class="fg"><label for="s-company">Company</label>
+              <input type="text" id="s-company" placeholder="e.g. Logística SA"></div>
+            <div class="fg"><label for="s-code">Participant Code</label>
+              <input type="text" id="s-code" placeholder="COD-001"></div>
+          </div>
+          <div class="fg">
+            <label for="s-position">Position</label>
+            <input type="text" id="s-position" placeholder="e.g. Director / Manager / Intern"></div>
+        </div>
+
+        <!-- Section: Certificate -->
+        <div class="form-section">
+          <div class="form-section-title">📜 Certificate</div>
+          <div class="fg"><label class="req" for="s-tmpl">Template</label>
+            <select id="s-tmpl"><option value="">— Select template —</option></select></div>
+          <div class="fg-row">
+            <div class="fg"><label class="req" for="s-course">Course Code</label>
+              <input type="text" id="s-course" placeholder="e.g. ILOG-01 or 26XXXXXXPVL"></div>
+            <div class="fg"><label class="req" for="s-date">Date</label>
+              <input type="date" id="s-date"></div>
+          </div>
+          <div class="fg-row">
+            <div class="fg"><label class="req" for="s-center">Training Center</label>
+              <input type="text" id="s-center" placeholder="e.g. Barcelona Campus"></div>
+            <div class="fg"><label class="req" for="s-hours">Hours</label>
+              <input type="number" id="s-hours" min="1" placeholder="20"></div>
+          </div>
+          <div class="fg"><label for="s-survey">Survey Link <span class="opt-hint">(optional — shows survey button in email only if provided)</span></label>
+            <input type="url" id="s-survey" placeholder="https://forms.gle/…"></div>
+        </div>
+
+        <!-- Section: Delivery -->
+        <div class="form-section">
+          <div class="form-section-title">📬 Delivery</div>
+          <div class="fg"><label class="req">Email Delivery</label>
+            <div class="radio-group" id="sendModeGroup">
+              <div class="radio-opt">
+                <input type="radio" name="sendMode" id="sm-student" value="student" checked>
+                <label for="sm-student">Send to Student</label>
+              </div>
+              <div class="radio-opt">
+                <input type="radio" name="sendMode" id="sm-coord" value="coordinator">
+                <label for="sm-coord">Send to Coordinator</label>
+              </div>
+              <div class="radio-opt-sub" id="coordEmailDiv" style="display:none">
+                <input type="email" id="s-coordemail" placeholder="coordinator@escola.eu"
+                  style="width:100%;padding:.5rem .75rem;border:1px solid #e5e7eb;border-radius:6px;font-size:.85rem;outline:none">
+              </div>
+              <div class="radio-opt">
+                <input type="radio" name="sendMode" id="sm-none" value="none">
+                <label for="sm-none">Don't send (generate only)</label>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-success" id="btnSingle" onclick="genSingle()">✦ Generate Certificate</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- BULK ────────────────────────────────────────────────────────────── -->
+    <div class="gen-panel" id="panel-bulk">
+      <div class="form-card" style="max-width:900px">
+        <div class="test-banner" id="testBannerBulk">⚠️ TEST MODE — Certificates will be marked as TEST and not officially issued</div>
+        <div class="alert-box" id="a-bulk"></div>
+        <div class="check-row test-mode" style="margin-bottom:1rem">
+          <input type="checkbox" id="b-testmode" onchange="toggleTestBanner('bulk',this.checked)">
+          <label for="b-testmode">🧪 Test mode (preview only)</label>
+        </div>
+
+        <div style="display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap">
+          <button class="btn btn-ghost" onclick="dlSampleCSV()">📥 Download CSV Template</button>
+          <button class="btn btn-ghost" onclick="dlSampleXLSX()">📊 Download Excel Template (.xlsx)</button>
+        </div>
+        <p class="info-note">
+          💡 The system accepts CSV headers in <strong>any language</strong> (Spanish, English, French, etc.) and maps them automatically.
+          Required fields: <strong>Name, Email, Course Code, Date, Training Center</strong>.
+          Large files are processed automatically in batches.
+        </p>
+
+        <div class="upload-zone" id="dropZone">
+          <div class="uz-icon">📂</div>
+          <p class="uz-text"><strong>Drag your CSV here</strong> or click to select</p>
+          <div class="uz-file" id="dropZoneFile"></div>
+          <input type="file" id="csvFile" accept=".csv,text/csv" style="display:none" onchange="onFileSelect(event,'bulk')">
+        </div>
+
+        <div id="csvValidationBulk"></div>
+
+        <div class="preview-wrap" id="previewWrap">
+          <div class="panel-head">
+            <h3>Preview — first 5 rows</h3>
+            <span class="badge-count" id="bulkCount">0 records</span>
+          </div>
+          <div style="overflow-x:auto">
+            <table><thead id="pvHead"></thead><tbody id="pvBody"></tbody></table>
+          </div>
+          <div style="padding:1rem;border-top:1px solid #e5e7eb">
+            <div class="fg"><label class="req" for="b-tmpl">Template for all</label>
+              <select id="b-tmpl"><option value="">— Select template —</option></select></div>
+            <div class="fg"><label for="b-survey">Survey Link <span class="opt-hint">(optional)</span></label>
+              <input type="url" id="b-survey" placeholder="https://forms.gle/…"></div>
+            <div class="fg"><label for="b-sendmode">Send Mode</label>
+              <select id="b-sendmode">
+                <option value="individual">Send individually to each student</option>
+                <option value="coordinator">Send all as ZIP to coordinator</option>
+                <option value="none">Don't send emails</option>
+              </select></div>
+            <div class="fg" id="coordEmailFg" style="display:none"><label for="b-coordemail">Coordinator Email</label>
+              <input type="email" id="b-coordemail" placeholder="coordinator@escola.eu"></div>
+            <button class="btn btn-success" id="btnBulk" onclick="genBulk()">✦ Generate All Certificates</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PREPRINTED CSV ───────────────────────────────────────────────────── -->
+    <div class="gen-panel" id="panel-preprinted-csv">
+      <div class="form-card" style="max-width:900px">
+        <div class="alert-box" id="a-preprinted-csv"></div>
+        <p style="font-size:.82rem;color:#6b7280;margin-bottom:1.25rem;line-height:1.6">
+          Upload a CSV with participant data. Two PDFs will be generated per record:<br>
+          <strong>To Save Template</strong> — full output (text + background) stored in Drive.<br>
+          <strong>To Print Template</strong> — text only (no background), sent as ZIP to the coordinator.
+        </p>
+        <div style="display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap">
+          <button class="btn btn-ghost" onclick="dlSampleCSV()">📥 Download CSV Template</button>
+          <button class="btn btn-ghost" onclick="dlSampleXLSX()">📊 Download Excel Template</button>
+        </div>
+
+        <div class="upload-zone" id="dropZonePP">
+          <div class="uz-icon">📂</div>
+          <p class="uz-text"><strong>Drag your CSV here</strong> or click to select</p>
+          <div class="uz-file" id="dropZonePPFile"></div>
+          <input type="file" id="csvFilePP" accept=".csv,text/csv" style="display:none" onchange="onFileSelect(event,'pp')">
+        </div>
+
+        <div id="csvValidationPP"></div>
+
+        <div class="preview-wrap" id="previewWrapPP">
+          <div class="panel-head">
+            <h3>Preview — first 5 rows</h3>
+            <span class="badge-count" id="ppCount">0 records</span>
+          </div>
+          <div style="overflow-x:auto">
+            <table><thead id="pvHeadPP"></thead><tbody id="pvBodyPP"></tbody></table>
+          </div>
+          <div style="padding:1rem;border-top:1px solid #e5e7eb">
+            <div class="fg-row">
+              <div class="fg"><label class="req" for="pp-tmpl-save">To Save Template <span class="opt-hint">(text + background)</span></label>
+                <select id="pp-tmpl-save"><option value="">— Select template —</option></select></div>
+              <div class="fg"><label class="req" for="pp-tmpl-print">To Print Template <span class="opt-hint">(text only)</span></label>
+                <select id="pp-tmpl-print"><option value="">— Select template —</option></select></div>
+            </div>
+            <div class="fg"><label for="pp-survey">Survey Link <span class="opt-hint">(optional)</span></label>
+              <input type="url" id="pp-survey" placeholder="https://forms.gle/…"></div>
+            <div class="fg"><label class="req" for="pp-coordemail">Coordinator Email</label>
+              <input type="email" id="pp-coordemail" placeholder="coordinator@escola.eu"></div>
+            <button class="btn btn-success" id="btnPreprintedCSV" onclick="genPreprintedCSV()">🖨️ Generate All Preprinted Certificates</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ STATISTICS ══════════════════════════════════════════════════════ -->
+  <div class="view" id="view-statistics">
+    <div class="page-head">
+      <h2>Statistics &amp; Reports</h2>
+      <p>Aggregations, data quality, and exports — language-independent. TEST certificates are always excluded.</p>
+    </div>
+
+    <div class="filter-card">
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:1rem">Filters</h3>
+      <div class="filter-row">
+        <div class="fg"><label for="filter-year">Year</label>
+          <select id="filter-year"><option value="">All years</option></select></div>
+        <div class="fg"><label for="filter-month">Month</label>
+          <select id="filter-month">
+            <option value="">All months</option>
+            <option value="0">January</option><option value="1">February</option>
+            <option value="2">March</option><option value="3">April</option>
+            <option value="4">May</option><option value="5">June</option>
+            <option value="6">July</option><option value="7">August</option>
+            <option value="8">September</option><option value="9">October</option>
+            <option value="10">November</option><option value="11">December</option>
+          </select></div>
+        <div class="fg"><label for="filter-course-type">Course Template</label>
+          <select id="filter-course-type"><option value="">All templates</option></select></div>
+      </div>
+      <div class="filter-row">
+        <div class="fg"><label for="filter-project">Project Type</label>
+          <select id="filter-project" data-options="project"><option value="">All projects</option></select></div>
+        <div class="fg"><label for="filter-alumni">Alumni Type</label>
+          <select id="filter-alumni" data-options="alumni"><option value="">All alumni types</option></select></div>
+        <div class="fg"><label for="filter-gender">Gender</label>
+          <select id="filter-gender">
+            <option value="">All</option>
+            <option value="M">M</option>
+            <option value="F">F</option>
+          </select></div>
+      </div>
+      <div class="filter-row">
+        <div class="fg"><label for="filter-from">Date From</label><input type="date" id="filter-from"></div>
+        <div class="fg"><label for="filter-to">Date To</label><input type="date" id="filter-to"></div>
+        <div class="fg"><label for="filter-country">Country</label>
+          <input type="text" id="filter-country" placeholder="All countries" list="country-list"></div>
+      </div>
+      <div class="filter-actions">
+        <button class="btn btn-primary" onclick="loadStatistics()">📊 Apply Filters</button>
+        <button class="btn btn-ghost" onclick="resetFilters()">↺ Reset</button>
+      </div>
+    </div>
+
+    <div class="alert-box" id="a-stats"></div>
+
+    <div id="aggSection" style="display:none">
+      <div class="section-title" style="margin-bottom:.9rem">Distributions</div>
+      <div class="agg-grid" id="aggGrid"></div>
+      <div class="quality-card">
+        <div class="panel-head" style="padding:0 0 .75rem;border-bottom:1px solid #e5e7eb;margin-bottom:1rem">
+          <h3>Data Quality</h3>
+        </div>
+        <div class="quality-grid" id="qualityGrid"></div>
+        <div id="missingFields" style="margin-top:1rem;font-size:.8rem;color:#6b7280"></div>
+        <div id="dupSection" style="margin-top:1rem;display:none">
+          <div style="font-size:.75rem;font-weight:700;color:#991b1b;margin-bottom:.5rem">⚠️ Duplicates detected:</div>
+          <div id="dupTableWrap"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-results">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+        <h3 style="font-size:1rem;font-weight:700">Results: <span id="stats-count">0</span> certificates</h3>
+      </div>
+      <div id="stats-table-wrap">
+        <p style="color:#9ca3af;text-align:center;padding:2rem">Click "Apply Filters" to load data</p>
+      </div>
+      <div class="export-bar">
+        <button class="btn btn-success" onclick="exportData('csv')">📥 Export CSV</button>
+        <button class="btn btn-ghost"   onclick="exportData('xlsx')">📊 Export Excel (.xlsx)</button>
+        <span id="export-hint" style="font-size:.75rem;color:#9ca3af"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ VERIFY ══════════════════════════════════════════════════════════ -->
+  <div class="view" id="view-verify">
+    <div class="page-head">
+      <h2>Verify Certificate</h2>
+      <p>Check authenticity, download or resend any issued certificate</p>
+    </div>
+    <div class="verify-layout">
+      <div class="verify-input-card">
+        <h3>Certificate Code</h3>
+        <p>Enter the code printed on the certificate (format: ESCOLA########EUROPEA)</p>
+        <input class="code-input-big" type="text" id="vCode" placeholder="ESCOLA12345678EUROPEA"
+          onkeydown="if(event.key==='Enter')doVerify()">
+        <button class="btn btn-primary" style="width:100%;margin-top:.5rem" onclick="doVerify()">
+          🔍 Verify Certificate
+        </button>
+      </div>
+      <div class="verify-result" id="verifyResult">
+        <div class="vr-empty">Enter a code to verify</div>
+      </div>
+    </div>
+
+    <!-- Actions panel — shown only after a successful verification -->
+    <div id="certActionsCard" style="display:none;margin-top:1.25rem;max-width:720px">
+      <div class="panel">
+        <div class="panel-head">
+          <h3 id="actionsCardTitle">Certificate Actions</h3>
+        </div>
+        <div style="padding:1.25rem;display:flex;flex-direction:column;gap:1.5rem">
+
+          <div>
+            <div class="section-title" style="margin-bottom:.6rem">📥 Download</div>
+            <a id="btnDownloadCert" href="#" target="_blank" rel="noopener"
+               class="btn btn-ghost" style="display:inline-flex;align-items:center;gap:.4rem;text-decoration:none">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+              </svg>
+              Open / Download Certificate PDF
+            </a>
+          </div>
+
+          <div>
+            <div class="section-title" style="margin-bottom:.6rem">📬 Resend Certificate by Email</div>
+            <div class="alert-box" id="a-resend"></div>
+            <div style="display:flex;gap:.75rem;align-items:flex-end;flex-wrap:wrap">
+              <div class="fg" style="flex:1;min-width:240px;margin-bottom:0">
+                <label for="resendEmail">Destination email</label>
+                <input type="email" id="resendEmail" placeholder="student@email.com or coordinator@escola.eu">
+              </div>
+              <button class="btn btn-primary" id="btnResend" onclick="resendCert()">
+                ✉ Resend Certificate
+              </button>
+            </div>
+            <p style="margin-top:.5rem;font-size:.75rem;color:#9ca3af">
+              Pre-filled with the student email on file — editable before sending.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ REPORT ══════════════════════════════════════════════════════════ -->
+  <div class="view" id="view-report">
+    <div class="page-head">
+      <h2>Report — Certificate Correction / Destruction</h2>
+      <p>Submit a request to destroy or modify an incorrectly issued certificate</p>
+    </div>
+    <div class="report-card">
+      <div class="alert-box" id="a-report"></div>
+      <div class="fg">
+        <label class="req" for="rpt-certname">Certificate Name (as shown on the certificate)</label>
+        <input type="text" id="rpt-certname" placeholder="e.g. María García López">
+      </div>
+      <div class="fg-row">
+        <div class="fg"><label class="req" for="rpt-coursecode">Course Code</label>
+          <input type="text" id="rpt-coursecode" placeholder="e.g. ILOG-01"></div>
+        <div class="fg"><label class="req" for="rpt-reqdate">Request Date</label>
+          <input type="datetime-local" id="rpt-reqdate"></div>
+      </div>
+      <div class="fg">
+        <label class="req" for="rpt-reqby">Requested by (Name / Email)</label>
+        <input type="text" id="rpt-reqby" placeholder="e.g. Eduard Rodés / e.rodes@escola.eu">
+      </div>
+      <div class="fg">
+        <label class="req" for="rpt-reason">Reason / Comment</label>
+        <textarea id="rpt-reason" rows="4" placeholder="Describe the error or reason. Include the previous certificate number if applicable."></textarea>
+      </div>
+      <div class="report-note">
+        <strong>📋 Important Note</strong>
+        After receiving confirmation from the Digital Products Department that the certificate has been destroyed or corrected, you may proceed to generate the new certificate.
+      </div>
+      <div style="margin-top:1.25rem">
+        <button class="btn btn-danger" id="btnReport" onclick="submitReport()">⚠️ Submit Report Request</button>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- /content -->
+</div><!-- /mainApp -->
+</div><!-- /app -->
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════
+// CONSTANTS
+// ═══════════════════════════════════════════════════════════════════════════
+const BULK_BATCH_SIZE = 30;   // 1 PDF per record
+const PP_BATCH_SIZE   = 15;   // 2 PDFs per record
+
+const EMAIL_RE = /\S+@\S+\.\S+/;
+const PHONE_RE = /^[\d\s\+\-\(\)\.]{6,20}$/;
+
+const PROJECT_TYPES = ['MOST','FREE STYLE','SURCO','TECHNICAL','PVL','PVL-TOT',"FORMA'T INTRODUCTION","FORMA'T TALENT",'PORT ACADEMY'];
+const ALUMNI_TYPES  = ['Companies & institutions','University students','Vocational students'];
+
+const TEMPLATE_HEADERS = [
+  'Name','Last_Name','Email','Phone','Course_Code','Date',
+  'Training_Center','Hours','Alumni_Type','Project_Type',
+  'Gender','Birth_Date','DNI','Country',
+  'Center_University_Company','Studies_Type','Company',
+  'Participant_Code','Position','Survey_Link'
+];
+const TEMPLATE_EXAMPLE = [
+  'María','García López','maria@example.com','34 600 123 456',
+  'ILOG-01','2025-06-15','Barcelona Campus','20',
+  'Companies & institutions','PVL',
+  'F','1990-03-22','12345678A','Spain',
+  'Universitat Politècnica de Catalunya','Ingeniería Industrial','Logística SA',
+  'COD-001','Director','https://forms.gle/...'
+];
+const REQUIRED_TEMPLATE = ['Name','Email','Course_Code','Date','Training_Center'];
+
+const COUNTRIES = [
+  'Spain','France','Germany','Italy','Portugal','United Kingdom','United States',
+  'Mexico','Colombia','Argentina','Brazil','Morocco','Senegal','Algeria','Tunisia',
+  'China','Japan','Netherlands','Belgium','Switzerland','Poland','Romania',
+  'Ukraine','Turkey','India','Russia','Canada','Australia','South Africa',
+  'Egypt','Ecuador','Peru','Chile','Venezuela','Bolivia','Cuba',
+  'Dominican Republic','Honduras','El Salvador','Guatemala','Costa Rica','Panama',
+  'Nigeria','Kenya','Ghana','Philippines','Vietnam','Indonesia','Pakistan',
+  'Bangladesh','Sri Lanka','Thailand','Singapore','South Korea','Iran','Iraq',
+  'Saudi Arabia','United Arab Emirates','Israel','Czech Republic','Hungary',
+  'Sweden','Norway','Denmark','Finland','Austria','Greece','Slovakia',
+  'Croatia','Serbia','Slovenia','Bulgaria','Lithuania','Latvia','Estonia',
+  'Luxembourg','Malta','Cyprus','Iceland','Ireland'
+];
+
+// ═══════════════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════════════
+const S = {
+  user: null, templates: [],
+  headerReverse: {}, required: ['name','email','course_code','date','training_center'],
+  bulkData: null, bulkRawHeaders: null,
+  ppData:   null, ppRawHeaders:   null,
+  statsData: [], statsFilters: null,
+  verifiedCert: null,
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SERVER CALL
+//  • Served by Apps Script      → google.script.run
+//  • Served elsewhere (GitHub Pages) → fetch() to the web app's doPost API
+// ═══════════════════════════════════════════════════════════════════════════
+const API_URL = 'https://script.google.com/macros/s/AKfycbyyupjWX7gBBPMDlUx9Ak0tIC84H1VH3_iiuot7kVdXoysPvWbOXh4deNgsVOvGmi4IKA/exec';
+const IN_APPS_SCRIPT = typeof google !== 'undefined' && google.script && google.script.run;
+
+function gs(fn, ...args) {
+  if (IN_APPS_SCRIPT) {
+    return new Promise((resolve, reject) => {
+      google.script.run
+        .withSuccessHandler(resolve)
+        .withFailureHandler(err => reject(err instanceof Error ? err : new Error(String(err && err.message || err))))
+        [fn](...args);
+    });
+  }
+  return fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },  // simple request → no CORS preflight
+    body: JSON.stringify({ fn, args }),
+    redirect: 'follow',
+  })
+    .then(r => { if (!r.ok) throw new Error('Server error ' + r.status); return r.json(); })
+    .then(res => { if (!res.ok) throw new Error(res.error || 'Server error'); return res.result; })
+    .catch(err => { throw err instanceof TypeError ? new Error('Cannot reach the server — check your connection') : err; });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// HEADER NORMALISATION — dictionary comes from the server at login
+// normKey MUST stay identical to normKey_() in Code.gs
+// ═══════════════════════════════════════════════════════════════════════════
+function normKey(raw) {
+  return String(raw||'').trim().toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g,'')
+    .replace(/[^a-z0-9\s_]/g,'').replace(/\s+/g,' ').trim();
+}
+
+function setHeaderMap(headerMap) {
+  S.headerReverse = {};
+  Object.keys(headerMap || {}).forEach(canon => {
+    headerMap[canon].forEach(v => { S.headerReverse[normKey(v)] = canon; });
+  });
+}
+
+function normaliseHeaderClient(raw) {
+  return S.headerReverse[normKey(raw)] || null;
+}
+
+function buildHeaderMapClient(rawHeaders) {
+  const map = {}, unknown = [];
+  rawHeaders.forEach((h,i) => {
+    const canon = normaliseHeaderClient(h);
+    if (canon) { if (map[canon]===undefined) map[canon]=i; }
+    else if (String(h).trim()) unknown.push(String(h).trim());
+  });
+  const missing = S.required.filter(f => map[f]===undefined);
+  return { map, unknown, missing };
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  setupPins();
+  setupDrop('dropZone',   'csvFile',   'bulk');
+  setupDrop('dropZonePP', 'csvFilePP', 'pp');
+  setToday();
+  setupSendModeListeners();
+  fillStaticOptions();
+  document.getElementById('b-sendmode').addEventListener('change', e =>
+    document.getElementById('coordEmailFg').style.display = e.target.value==='coordinator' ? 'block':'none'
+  );
+  document.getElementById('s-tmpl').addEventListener('change', function() {
+    const o = this.options[this.selectedIndex];
+    if (o && o.dataset.course) {
+      document.getElementById('s-course').value = o.dataset.course;
+      if (o.dataset.hours && o.dataset.hours !== '0') document.getElementById('s-hours').value = o.dataset.hours;
+    }
+  });
+  setNow('rpt-reqdate');
+});
+
+function fillStaticOptions() {
+  const dl = document.getElementById('country-list');
+  COUNTRIES.forEach(c => { const o=document.createElement('option'); o.value=c; dl.appendChild(o); });
+
+  document.querySelectorAll('select[data-options]').forEach(sel => {
+    const list = sel.dataset.options === 'project' ? PROJECT_TYPES : ALUMNI_TYPES;
+    list.forEach(v => { const o=document.createElement('option'); o.value=v; o.textContent=v; sel.appendChild(o); });
+  });
+
+  const yearSel = document.getElementById('filter-year');
+  const thisYear = new Date().getFullYear();
+  for (let y = thisYear; y >= 2024; y--) {
+    const o=document.createElement('option'); o.value=String(y); o.textContent=String(y); yearSel.appendChild(o);
+  }
+}
+
+function setToday() {
+  document.getElementById('s-date').value = localDateStr(new Date());
+}
+function setNow(id) {
+  const now = new Date(), pad = n => String(n).padStart(2,'0');
+  const dt = localDateStr(now)+'T'+pad(now.getHours())+':'+pad(now.getMinutes());
+  const el = document.getElementById(id); if (el) el.value = dt;
+}
+function toggleTestBanner(section, on) {
+  document.getElementById('testBanner'+(section==='single'?'Single':'Bulk')).classList.toggle('show', on);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PIN INPUT
+// ═══════════════════════════════════════════════════════════════════════════
+function setupPins() {
+  const p = [0,1,2,3].map(i => document.getElementById('p'+i));
+  p.forEach((el,i) => {
+    el.addEventListener('input', e => {
+      e.target.value = e.target.value.replace(/\D/g,'');
+      if (e.target.value.length===1 && i<3) p[i+1].focus();
+      if (i===3 && e.target.value.length===1 && p.every(x => x.value)) doLogin();
+    });
+    el.addEventListener('keydown', e => {
+      if (e.key==='Backspace' && !e.target.value && i>0) p[i-1].focus();
+      if (e.key==='Enter') doLogin();
+    });
+    el.addEventListener('paste', e => {
+      e.preventDefault();
+      const d = (e.clipboardData||window.clipboardData).getData('text').replace(/\D/g,'').slice(0,4);
+      d.split('').forEach((c,j) => { if (p[j]) p[j].value=c; });
+      if (d.length===4) { p[3].focus(); doLogin(); }
+    });
+  });
+  p[0].focus();
+}
+
+function setupSendModeListeners() {
+  document.querySelectorAll('input[name="sendMode"]').forEach(radio => {
+    radio.addEventListener('change', e =>
+      document.getElementById('coordEmailDiv').style.display = e.target.value==='coordinator' ? 'block':'none'
+    );
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════════════════════════════════════════
+let _loginBusy = false;
+async function doLogin() {
+  if (_loginBusy) return;
+  const c = [0,1,2,3].map(i => document.getElementById('p'+i).value).join('');
+  if (c.length!==4) { showLoginErr('Enter all 4 digits'); return; }
+  const btn = document.getElementById('loginBtn');
+  _loginBusy = true; btn.disabled = true; showLoad('Validating…');
+  try {
+    const r = await gs('validateAccessCode', c);
+    if (r && r.valid) {
+      S.user = c; S.templates = r.templates||[];
+      setHeaderMap(r.headerMap);
+      if (r.requiredFields) S.required = r.requiredFields;
+      populateSelects(); populateCourseTypeFilter();
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('mainApp').classList.add('active');
+      document.getElementById('uCode').textContent = 'User ••' + c.slice(-2);
+      document.getElementById('loginErr').classList.remove('show');
+      showView('dashboard');
+    } else { showLoginErr(r&&r.error||'Invalid code'); clearPins(); }
+  } catch (err) {
+    showLoginErr('System error: '+err.message);
+  } finally {
+    hideLoad(); btn.disabled = false; _loginBusy = false;
+  }
+}
+function showLoginErr(m) {
+  const el = document.getElementById('loginErr');
+  el.textContent = '✕ '+m; el.classList.add('show');
+}
+function clearPins() {
+  [0,1,2,3].forEach(i => document.getElementById('p'+i).value='');
+  document.getElementById('p0').focus();
+}
+function doLogout() {
+  if (!confirm('Are you sure you want to logout?')) return;
+  Object.assign(S, {
+    user:null, templates:[], bulkData:null, bulkRawHeaders:null,
+    ppData:null, ppRawHeaders:null, statsData:[], statsFilters:null, verifiedCert:null
+  });
+  resetCsvUi('bulk'); resetCsvUi('pp');
+  document.getElementById('stats-table-wrap').innerHTML = '<p style="color:#9ca3af;text-align:center;padding:2rem">Click "Apply Filters" to load data</p>';
+  document.getElementById('aggSection').style.display = 'none';
+  document.getElementById('certActionsCard').style.display = 'none';
+  document.getElementById('verifyResult').innerHTML = '<div class="vr-empty">Enter a code to verify</div>';
+  document.getElementById('recentTbody').innerHTML = '<tr><td colspan="8" style="text-align:center;padding:2rem;color:#9ca3af">Loading…</td></tr>';
+  document.getElementById('mainApp').classList.remove('active');
+  document.getElementById('loginScreen').style.display='';
+  document.getElementById('loginErr').classList.remove('show');
+  clearPins();
+}
+function handleAuthError(msg) {
+  if (/unauthorized/i.test(String(msg||''))) {
+    alert('Your session is no longer valid. Please log in again.');
+    S.user = null;
+    document.getElementById('mainApp').classList.remove('active');
+    document.getElementById('loginScreen').style.display='';
+    clearPins();
+    return true;
+  }
+  return false;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════════════════════════
+function showView(n) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-'+n).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('nav-'+n).classList.add('active');
+  if (n==='dashboard') loadDashboard();
+}
+function setTab(t) {
+  ['single','bulk','preprinted-csv'].forEach(x => {
+    document.getElementById('tab-'+x).classList.toggle('active', x===t);
+    document.getElementById('panel-'+x).classList.toggle('active', x===t);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════════════════════════════════════
+function loadDashboard() {
+  if (!S.user) return;
+  gs('getDashboardStats', S.user).then(s => {
+    if (s.error && handleAuthError(s.error)) return;
+    document.getElementById('s-total').textContent = s.totalCerts;
+    document.getElementById('s-month').textContent = s.thisMonth;
+    document.getElementById('s-templ').textContent = s.totalTempl;
+    document.getElementById('s-users').textContent = s.totalUsers;
+  }).catch(() => {});
+
+  gs('getRecentCertificates', 15, S.user).then(rows => {
+    rows = rows || [];
+    document.getElementById('recentCount').textContent = rows.length+' recent';
+    const tb = document.getElementById('recentTbody');
+    if (!rows.length) {
+      tb.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:2rem;color:#9ca3af">No certificates yet</td></tr>';
+      return;
+    }
+    tb.innerHTML = rows.map(r => `<tr>
+      <td class="td-code">${esc(r.code)||'–'}</td>
+      <td class="td-name">${esc(fullName(r))}</td>
+      <td class="td-email">${esc(r.email)||'–'}</td>
+      <td>${esc(r.course)||'–'}</td>
+      <td style="font-size:.78rem;color:#6b7280">${esc(r.projectType)||'–'}</td>
+      <td style="font-size:.78rem;color:#6b7280">${esc(r.alumniType)||'–'}</td>
+      <td>${esc(r.date)||'–'}</td>
+      <td>${typePill(r.isTest)}</td>
+    </tr>`).join('');
+  }).catch(err => {
+    document.getElementById('recentTbody').innerHTML =
+      '<tr><td colspan="8" style="text-align:center;padding:2rem;color:#991b1b">Error: '+esc(err.message)+'</td></tr>';
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// POPULATE SELECTS
+// ═══════════════════════════════════════════════════════════════════════════
+function populateSelects() {
+  ['s-tmpl','b-tmpl','pp-tmpl-save','pp-tmpl-print'].forEach(id => {
+    const sel = document.getElementById(id);
+    sel.innerHTML = '<option value="">— Select template —</option>';
+    S.templates.forEach(t => {
+      const o = document.createElement('option');
+      o.value = t.id; o.textContent = t.name;
+      o.dataset.course   = t.courseName    || '';
+      o.dataset.hours    = t.hoursDefault  || '';
+      sel.appendChild(o);
+    });
+  });
+}
+
+function populateCourseTypeFilter() {
+  const sel = document.getElementById('filter-course-type');
+  sel.innerHTML = '<option value="">All templates</option>';
+  S.templates.forEach(t => {
+    const o = document.createElement('option'); o.value = t.name; o.textContent = t.name;
+    sel.appendChild(o);
+  });
+}
+
+function selectedText(id) {
+  const sel = document.getElementById(id);
+  return sel && sel.selectedIndex > 0 ? sel.options[sel.selectedIndex].text : '';
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// GENERATE — SINGLE
+// ═══════════════════════════════════════════════════════════════════════════
+async function genSingle() {
+  const sendMode   = document.querySelector('input[name="sendMode"]:checked').value;
+  const coordEmail = sendMode==='coordinator' ? v('s-coordemail').trim() : '';
+  const isTest     = document.getElementById('s-testmode').checked;
+
+  const d = {
+    name:         v('s-name').trim(),
+    lastName:     v('s-lastname').trim(),
+    email:        v('s-email').trim(),
+    phone:        v('s-phone').trim(),
+    course:       v('s-course').trim(),
+    date:         v('s-date'),
+    center:       v('s-center').trim(),
+    hours:        v('s-hours'),
+    template:     v('s-tmpl'),
+    templateName: selectedText('s-tmpl'),
+    survey:       v('s-survey').trim(),
+    sendMode, coordinatorEmail: coordEmail,
+    accessCode: S.user, testMode: isTest,
+    gender:       v('s-gender'),
+    birthDate:    v('s-birthdate'),
+    dni:          v('s-dni').trim(),
+    country:      v('s-country').trim(),
+    alumniType:   v('s-alumni'),
+    projectType:  v('s-project'),
+    uniCompany:   v('s-unicompany').trim(),
+    studiesType:  v('s-studies').trim(),
+    company:      v('s-company').trim(),
+    internalCode: v('s-code').trim(),
+    position:     v('s-position').trim(),
+  };
+
+  // Same client-side checks as before (server re-validates)
+  const required = [['s-name',d.name],['s-email',d.email],['s-course',d.course],['s-tmpl',d.template]];
+  document.querySelectorAll('#panel-single .invalid').forEach(el => el.classList.remove('invalid'));
+  const missing = required.filter(([,val]) => !val);
+  if (missing.length) {
+    missing.forEach(([id]) => document.getElementById(id).classList.add('invalid'));
+    return showAlert('a-single','Fill all required fields (*)','err');
+  }
+  if (!EMAIL_RE.test(d.email)) { markInvalid('s-email'); return showAlert('a-single','Valid email required','err'); }
+  if (d.phone && !PHONE_RE.test(d.phone)) { markInvalid('s-phone'); return showAlert('a-single','Phone format invalid','err'); }
+  if (sendMode==='coordinator' && !coordEmail) return showAlert('a-single','Enter coordinator email','err');
+
+  const btn = document.getElementById('btnSingle');
+  btn.disabled = true; showLoad(isTest ? 'Generating test preview…':'Generating…');
+  try {
+    const r = await gs('generateSingleCertificate', d);
+    if (r.success) {
+      const label = r.isTest ? ' [TEST]':'';
+      let msg = '✓ Certificate generated'+label+' · Code: <strong>'+esc(r.code)+'</strong>';
+      if (r.url) msg += ' · <a href="'+esc(r.url)+'" target="_blank" rel="noopener">Open PDF</a>';
+      if (sendMode !== 'none' && !r.emailSent) msg += '<br>⚠ The e-mail could not be sent — use Verify → Resend.';
+      showAlert('a-single', msg, (r.isTest || (sendMode!=='none' && !r.emailSent)) ? 'warn' : 'ok', true);
+      ['s-name','s-lastname','s-email','s-phone','s-survey',
+       's-coordemail','s-birthdate','s-dni','s-country','s-unicompany','s-studies','s-company','s-code','s-position']
+        .forEach(clearField);
+      ['s-gender','s-alumni','s-project'].forEach(id => document.getElementById(id).value='');
+      document.getElementById('sm-student').checked = true;
+      document.getElementById('coordEmailDiv').style.display = 'none';
+      if (!r.isTest) loadDashboard();
+    } else {
+      if (!handleAuthError(r.error)) showAlert('a-single', r.error||'Error generating','err');
+    }
+  } catch (err) {
+    showAlert('a-single','Error: '+err.message,'err');
+  } finally {
+    hideLoad(); btn.disabled = false;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// CSV UPLOAD & PARSING
+// ═══════════════════════════════════════════════════════════════════════════
+function setupDrop(zoneId, inputId, target) {
+  const z = document.getElementById(zoneId), i = document.getElementById(inputId);
+  if (!z||!i) return;
+  z.addEventListener('click', () => i.click());
+  z.addEventListener('dragover', e => { e.preventDefault(); z.classList.add('drag'); });
+  z.addEventListener('dragleave', () => z.classList.remove('drag'));
+  z.addEventListener('drop', e => {
+    e.preventDefault(); z.classList.remove('drag');
+    if (e.dataTransfer.files[0]) onFileSelect({ target:{ files: e.dataTransfer.files } }, target);
+  });
+}
+
+function onFileSelect(e, target) {
+  const f = e.target.files[0];
+  if (!f) return;
+  const alertId = target==='pp' ? 'a-preprinted-csv':'a-bulk';
+  if (!/\.csv$/i.test(f.name)) return showAlert(alertId,'Only .csv files are accepted (save Excel as "CSV UTF-8")','err');
+  document.getElementById(target==='pp' ? 'dropZonePPFile' : 'dropZoneFile').textContent = '📄 ' + f.name;
+  const r = new FileReader();
+  r.onload = ev => {
+    let text = ev.target.result;
+    // Excel "CSV" (non-UTF-8) shows replacement chars → re-read as Windows-1252
+    if (text.indexOf('�') >= 0) {
+      const r2 = new FileReader();
+      r2.onload = ev2 => parseCSV(ev2.target.result, target);
+      r2.readAsText(f, 'windows-1252');
+      return;
+    }
+    parseCSV(text, target);
+  };
+  r.readAsText(f, 'UTF-8');
+}
+
+/**
+ * RFC-4180-style CSV parser: quoted fields, escaped quotes (""),
+ * line breaks inside quotes, ; or , delimiter (auto-detected), BOM.
+ */
+function parseCSVText(text) {
+  text = String(text||'').replace(/^﻿/, '');
+  const firstLine = text.split(/\r?\n/)[0] || '';
+  const delim = (firstLine.split(';').length > firstLine.split(',').length) ? ';' : ',';
+  const rows = [];
+  let row = [], cur = '', inQ = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (inQ) {
+      if (ch === '"') {
+        if (text[i+1] === '"') { cur += '"'; i++; }
+        else inQ = false;
+      } else cur += ch;
+    } else if (ch === '"') {
+      inQ = true;
+    } else if (ch === delim) {
+      row.push(cur.trim()); cur = '';
+    } else if (ch === '\n' || ch === '\r') {
+      if (ch === '\r' && text[i+1] === '\n') i++;
+      row.push(cur.trim()); rows.push(row); row = []; cur = '';
+    } else cur += ch;
+  }
+  if (cur !== '' || row.length) { row.push(cur.trim()); rows.push(row); }
+  return rows.filter(r => r.some(c => c !== ''));
+}
+
+function csvTargetIds(target) {
+  const isPP = target==='pp';
+  return {
+    isPP,
+    valDivId: isPP ? 'csvValidationPP':'csvValidationBulk',
+    headId:   isPP ? 'pvHeadPP':'pvHead',
+    bodyId:   isPP ? 'pvBodyPP':'pvBody',
+    wrapId:   isPP ? 'previewWrapPP':'previewWrap',
+    countId:  isPP ? 'ppCount':'bulkCount',
+    alertId:  isPP ? 'a-preprinted-csv':'a-bulk',
+    inputId:  isPP ? 'csvFilePP':'csvFile',
+    fileId:   isPP ? 'dropZonePPFile':'dropZoneFile',
+  };
+}
+
+function resetCsvUi(target) {
+  const ids = csvTargetIds(target);
+  document.getElementById(ids.wrapId).classList.remove('show');
+  document.getElementById(ids.inputId).value = '';
+  document.getElementById(ids.valDivId).innerHTML = '';
+  document.getElementById(ids.valDivId).className = '';
+  document.getElementById(ids.fileId).textContent = '';
+}
+
+function parseCSV(text, target) {
+  const ids  = csvTargetIds(target);
+  const rows = parseCSVText(text);
+  if (!rows.length) return showAlert(ids.alertId, 'The CSV file is empty', 'err');
+
+  const rawHeaders = rows[0].map(x => x.replace(/^["']|["']$/g,'').replace(/\s*\*$/,''));
+  const { map, unknown, missing } = buildHeaderMapClient(rawHeaders);
+
+  if (ids.isPP) { S.ppData = null; S.ppRawHeaders = null; }
+  else          { S.bulkData = null; S.bulkRawHeaders = null; }
+  document.getElementById(ids.wrapId).classList.remove('show');
+
+  const parsed = rows.slice(1);
+  const issues = missing.length ? [] : precheckRows(parsed, map);
+  renderCsvValidation(ids.valDivId, rawHeaders, map, unknown, missing, issues);
+  if (missing.length) {
+    showAlert(ids.alertId, '✗ Missing required headers: '+esc(missing.join(', ')), 'err', true);
+    return;
+  }
+  if (!parsed.length) return showAlert(ids.alertId, 'The CSV has headers but no data rows', 'err');
+
+  const canonHeaders = rawHeaders.map(h => {
+    const c = normaliseHeaderClient(h);
+    return c ? esc(c)+'<br><small style="color:#9ca3af;font-size:.65rem">← '+esc(h)+'</small>' : esc(h);
+  });
+  document.getElementById(ids.headId).innerHTML = '<tr><th>#</th>'+canonHeaders.map(h=>'<th>'+h+'</th>').join('')+'</tr>';
+  const tb = document.getElementById(ids.bodyId);
+  tb.innerHTML = '';
+  for (let i=0; i<Math.min(5,parsed.length); i++) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = '<td style="color:#9ca3af">'+(i+1)+'</td>'+parsed[i].map(x => '<td>'+esc(x)+'</td>').join('');
+    tb.appendChild(tr);
+  }
+
+  if (ids.isPP) { S.ppData = parsed; S.ppRawHeaders = rawHeaders; }
+  else          { S.bulkData = parsed; S.bulkRawHeaders = rawHeaders; }
+
+  document.getElementById(ids.wrapId).classList.add('show');
+  document.getElementById(ids.countId).textContent = parsed.length+' records';
+  let msg = '✓ CSV loaded: '+parsed.length+' records — '+Object.keys(map).length+' fields mapped'
+          + (unknown.length?' ('+unknown.length+' unknown headers ignored)':'');
+  if (issues.length) msg += '<br>⚠ '+issues.length+' row(s) will be rejected by validation — see details above.';
+  showAlert(ids.alertId, msg, issues.length ? 'warn' : 'ok', true);
+}
+
+/** Preview of the server-side rules (server remains the authority). */
+function precheckRows(parsed, map) {
+  const get = (row, f) => map[f] !== undefined ? String(row[map[f]]||'').trim() : '';
+  const issues = [];
+  parsed.forEach((row, i) => {
+    const e = [];
+    if (!get(row,'name'))  e.push('Name');
+    const em = get(row,'email'); if (!em || !EMAIL_RE.test(em)) e.push('Email');
+    if (!get(row,'course_code'))     e.push('Course_Code');
+    if (!get(row,'date'))            e.push('Date');
+    if (!get(row,'training_center')) e.push('Training_Center');
+    const ph = get(row,'phone'); if (ph && !PHONE_RE.test(ph)) e.push('Phone');
+    if (e.length) issues.push('Row '+(i+1)+': '+e.join(', '));
+  });
+  return issues;
+}
+
+function renderCsvValidation(divId, rawHeaders, map, unknown, missing, issues) {
+  const div = document.getElementById(divId);
+  if (!div) return;
+  const cls = missing.length ? 'csv-val-err' : ((unknown.length || issues.length) ? 'csv-val-warn':'csv-val-ok');
+  const status = missing.length ? '✗ Missing required fields: '+missing.join(', ')
+               : (unknown.length ? '⚠ All required fields found. '+unknown.length+' unknown headers ignored.'
+                                 : '✓ All fields mapped successfully');
+  const tags = rawHeaders.map(h => {
+    const c = normaliseHeaderClient(h);
+    const cls2 = c ? 'csv-tag-ok':'csv-tag-unk';
+    const label = c ? (c+' ← '+h) : h+' (?)';
+    return '<span class="csv-tag '+cls2+'">'+esc(label)+'</span>';
+  }).join('');
+  const missTags = missing.map(m => '<span class="csv-tag csv-tag-miss">'+esc(m)+' MISSING</span>').join('');
+  const issuesHtml = issues.length
+    ? '<div class="row-issues"><strong>Rows with missing/invalid fields:</strong><div class="err-detail">'+esc(issues.slice(0,200).join('\n'))+'</div></div>'
+    : '';
+  div.className = 'csv-validation '+cls;
+  div.innerHTML = '<div style="font-weight:700;margin-bottom:.5rem">'+esc(status)+'</div>'+
+    '<div class="csv-mapping">'+tags+missTags+'</div>'+issuesHtml;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// BATCH RUNNER — splits records so each server call stays under the 6-min limit
+// ═══════════════════════════════════════════════════════════════════════════
+async function runInBatches(records, size, label, sendBatch) {
+  const total = records.length, batches = Math.ceil(total/size);
+  const res = { ok:0, fail:0, errors:[], batches, aborted:false };
+  setProgress(0);
+  for (let b = 0; b < batches; b++) {
+    const start = b*size, end = Math.min(start+size, total);
+    showLoad(label+' '+end+' of '+total+'… (batch '+(b+1)+'/'+batches+')');
+    try {
+      const r = await sendBatch(records.slice(start,end), {
+        rowOffset: start,
+        batchLabel: batches > 1 ? '(part '+(b+1)+'/'+batches+')' : '',
+      });
+      if (r && r.success) {
+        res.ok += r.count||0; res.fail += r.errors||0;
+        if (r.errorDetails && r.errorDetails.length) res.errors.push(...r.errorDetails);
+      } else {
+        res.fail += end-start;
+        res.errors.push('Batch '+(b+1)+': '+((r&&r.error)||'unknown error'));
+        if (r && /unauthorized/i.test(r.error||'')) { res.aborted = true; break; }
+      }
+    } catch (err) {
+      res.fail += end-start;
+      res.errors.push('Batch '+(b+1)+' failed: '+err.message);
+    }
+    setProgress(Math.round(end/total*100));
+  }
+  hideLoad();
+  return res;
+}
+
+function batchSummary(res, noun, isTest) {
+  const label = isTest ? ' [TEST]' : '';
+  let msg = '✓ Generated '+res.ok+' '+noun+label+
+            (res.fail ? ' · '+res.fail+' errors' : '')+
+            (res.batches > 1 ? ' ('+res.batches+' batches)' : '');
+  if (res.errors.length) msg += '<div class="err-detail">'+esc(res.errors.join('\n'))+'</div>';
+  return msg;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// GENERATE — BULK
+// ═══════════════════════════════════════════════════════════════════════════
+async function genBulk() {
+  const tmpl = v('b-tmpl'), mode = document.getElementById('b-sendmode').value;
+  const coord = v('b-coordemail').trim(), isTest = document.getElementById('b-testmode').checked;
+  if (!tmpl)        return showAlert('a-bulk','Select a template','err');
+  if (!S.bulkData)  return showAlert('a-bulk','Upload CSV first','err');
+  if (mode==='coordinator' && !EMAIL_RE.test(coord)) return showAlert('a-bulk','Enter a valid coordinator email','err');
+  if (!isTest && mode==='individual' &&
+      !confirm('This will generate and e-mail '+S.bulkData.length+' official certificates. Continue?')) return;
+
+  const tmplName = selectedText('b-tmpl');
+  const survey   = v('b-survey').trim();
+  const btn = document.getElementById('btnBulk');
+  btn.disabled = true;
+
+  const res = await runInBatches(S.bulkData, BULK_BATCH_SIZE, 'Processing', (batch, info) =>
+    gs('generateBulkCertificates', {
+      records: batch, rawHeaders: S.bulkRawHeaders,
+      template: tmpl, templateName: tmplName,
+      accessCode: S.user, surveyLink: survey,
+      sendMode: mode, coordinatorEmail: coord, testMode: isTest,
+      rowOffset: info.rowOffset, batchLabel: info.batchLabel,
+    })
+  );
+
+  btn.disabled = false;
+  if (res.aborted && handleAuthError('unauthorized')) return;
+  showAlert('a-bulk', batchSummary(res, 'certificates', isTest), (isTest || res.fail) ? 'warn' : 'ok', true);
+  if (res.ok > 0) {
+    S.bulkData = null; S.bulkRawHeaders = null;
+    resetCsvUi('bulk');
+    clearField('b-survey');
+    if (!isTest) loadDashboard();
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// GENERATE — PREPRINTED CSV
+// ═══════════════════════════════════════════════════════════════════════════
+async function genPreprintedCSV() {
+  const tmplSave  = v('pp-tmpl-save'), tmplPrint = v('pp-tmpl-print');
+  const coord     = v('pp-coordemail').trim();
+  if (!tmplSave)  return showAlert('a-preprinted-csv','Select the "To Save" template','err');
+  if (!tmplPrint) return showAlert('a-preprinted-csv','Select the "To Print" template','err');
+  if (!S.ppData)  return showAlert('a-preprinted-csv','Upload CSV first','err');
+  if (!EMAIL_RE.test(coord)) return showAlert('a-preprinted-csv','Enter a valid coordinator email','err');
+
+  const saveName  = selectedText('pp-tmpl-save');
+  const printName = selectedText('pp-tmpl-print');
+  const survey    = v('pp-survey').trim();
+  const btn = document.getElementById('btnPreprintedCSV');
+  btn.disabled = true;
+
+  const res = await runInBatches(S.ppData, PP_BATCH_SIZE, 'Generating preprinted', (batch, info) =>
+    gs('generatePreprintedCSV', {
+      records: batch, rawHeaders: S.ppRawHeaders,
+      templateToSave: tmplSave, templateToPrint: tmplPrint,
+      templateToSaveName: saveName, templateToPrintName: printName,
+      surveyLink: survey, coordinatorEmail: coord, accessCode: S.user,
+      rowOffset: info.rowOffset, batchLabel: info.batchLabel,
+    })
+  );
+
+  btn.disabled = false;
+  if (res.aborted && handleAuthError('unauthorized')) return;
+  let msg = batchSummary(res, 'certificate pairs', false);
+  if (res.ok) msg = msg.replace('pairs', 'pairs. Print-only ZIP'+(res.batches>1?'s':'')+' sent to coordinator');
+  showAlert('a-preprinted-csv', msg, res.fail ? 'warn' : 'ok', true);
+  if (res.ok > 0) {
+    S.ppData = null; S.ppRawHeaders = null;
+    resetCsvUi('pp');
+    clearField('pp-survey'); clearField('pp-coordemail');
+    loadDashboard();
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// TEMPLATE DOWNLOADS — CSV and real XLSX
+// ═══════════════════════════════════════════════════════════════════════════
+function dlSampleCSV() {
+  const csv = TEMPLATE_HEADERS.join(',')+'\r\n'+TEMPLATE_EXAMPLE.map(x => '"'+x.replace(/"/g,'""')+'"').join(',');
+  triggerDownload(new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8;'}), 'CertManager_Template.csv');
+}
+
+function loadXLSX() {
+  return new Promise((resolve, reject) => {
+    if (typeof XLSX !== 'undefined') return resolve();
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error('Could not load Excel library'));
+    document.head.appendChild(script);
+  });
+}
+
+async function dlSampleXLSX() {
+  try { await loadXLSX(); }
+  catch (e) { alert('Could not load Excel library. Try downloading the CSV instead.'); return; }
+
+  const headers = TEMPLATE_HEADERS.map(h => REQUIRED_TEMPLATE.includes(h) ? h+' *' : h);
+  const wb = XLSX.utils.book_new();
+
+  const wsData = [headers, TEMPLATE_EXAMPLE];
+  for (let i=0; i<50; i++) wsData.push(headers.map(()=>''));
+  const ws = XLSX.utils.aoa_to_sheet(wsData);
+  ws['!cols'] = [
+    {wch:18},{wch:22},{wch:28},{wch:20},{wch:16},{wch:14},
+    {wch:24},{wch:8},{wch:26},{wch:20},{wch:8},{wch:14},
+    {wch:16},{wch:16},{wch:32},{wch:24},{wch:20},{wch:16},
+    {wch:20},{wch:32}
+  ];
+  XLSX.utils.book_append_sheet(wb, ws, 'Participants');
+
+  const DOC_URL = 'https://docs.google.com/document/d/1pu0MQjEUa25jpSmwA2DbeRsYZQbkXQJODzdTueMJQ4I/edit?usp=sharing';
+  const data = [
+    ['CertManager Pro v7.1 — Import Template'],
+    [''],
+    ['FIELD', 'DESCRIPTION', 'VALID VALUES / EXAMPLE'],
+    ['Name *', 'First name', 'María'],
+    ['Last_Name', 'Surname(s)', 'García López'],
+    ['Email *', 'Valid email address', 'student@example.com'],
+    ['Phone', 'Mobile phone (stored as text)', '34 600 123 456'],
+    ['Course_Code *', 'Course identifier', 'ILOG-01'],
+    ['Date *', 'Course date (YYYY-MM-DD or dd/MM/yyyy)', '2025-06-15'],
+    ['Training_Center *', 'Location / center name', 'Barcelona Campus'],
+    ['Hours', 'Number of training hours', '20'],
+    ['Alumni_Type', 'Participant type', ALUMNI_TYPES.join(' | ')],
+    ['Project_Type', 'Project / course type', PROJECT_TYPES.join(' | ')],
+    ['Gender', 'M or F', 'F'],
+    ['Birth_Date', 'Date of birth (YYYY-MM-DD or dd/MM/yyyy)', '1990-03-22'],
+    ['DNI', 'National ID / Passport', '12345678A'],
+    ['Country', 'Country of origin (any language — normalised to English)', 'Spain'],
+    ['Center_University_Company', 'University or company name', 'Universitat Politècnica de Catalunya'],
+    ['Studies_Type', 'Field of studies', 'Ingeniería Industrial'],
+    ['Company', 'Company name', 'Logística SA'],
+    ['Participant_Code', 'Internal reference code', 'COD-001'],
+    ['Position', 'Role / position', 'Director / Intern / Manager'],
+    ['Survey_Link', 'Feedback survey URL', 'https://forms.gle/...'],
+    [''],
+    ['* Required fields'],
+    ['Headers are accepted in Spanish, English, French, Italian — mapping is automatic.'],
+    ['Phone, DNI, Participant_Code are stored as TEXT to preserve leading zeros and special chars.'],
+    ['Save the Participants sheet as "CSV UTF-8" before importing.'],
+    [''],
+    ['📌 Prompt & Instructions (Google Doc)'],
+  ];
+  const wsInst = XLSX.utils.aoa_to_sheet(data);
+  const linkCell = 'A' + data.length;
+  wsInst[linkCell].l = { Target: DOC_URL };
+  wsInst['!cols'] = [{ wch: 30 }, { wch: 50 }, { wch: 70 }];
+  XLSX.utils.book_append_sheet(wb, wsInst, 'INSTRUCTIONS');
+
+  XLSX.writeFile(wb, 'CertManager_Template_v7.xlsx');
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// STATISTICS
+// ═══════════════════════════════════════════════════════════════════════════
+function currentFilters() {
+  return {
+    accessCode:  S.user,
+    year:        v('filter-year'),
+    month:       v('filter-month'),
+    dateFrom:    v('filter-from'),
+    dateTo:      v('filter-to'),
+    courseType:  v('filter-course-type'),
+    projectType: v('filter-project'),
+    alumniType:  v('filter-alumni'),
+    gender:      v('filter-gender'),
+    country:     v('filter-country').trim(),
+  };
+}
+
+function resetFilters() {
+  ['filter-year','filter-month','filter-from','filter-to','filter-course-type',
+   'filter-project','filter-alumni','filter-gender','filter-country'].forEach(clearField);
+}
+
+async function loadStatistics() {
+  const filters = currentFilters();
+  if (filters.dateFrom && filters.dateTo && filters.dateFrom > filters.dateTo)
+    return showAlert('a-stats', '"Date From" must be before "Date To"', 'err');
+  document.getElementById('a-stats').className = 'alert-box';
+  showLoad('Loading data…');
+  try {
+    const [r, s] = await Promise.all([
+      gs('getStatisticsData', filters),
+      gs('getStatisticsSummary', filters),
+    ]);
+    if (r.error) { if (!handleAuthError(r.error)) showAlert('a-stats', 'Error: '+esc(r.error), 'err', true); return; }
+    S.statsData = r.data||[];
+    S.statsFilters = filters;
+    renderStatsTable();
+    if (s && s.success && s.total) {
+      renderAggregations(s);
+      renderQuality(s.quality);
+      document.getElementById('aggSection').style.display='block';
+    } else {
+      document.getElementById('aggSection').style.display='none';
+    }
+  } catch (err) {
+    showAlert('a-stats', 'Error: '+esc(err.message), 'err', true);
+  } finally {
+    hideLoad();
+  }
+}
+
+function renderStatsTable() {
+  document.getElementById('stats-count').textContent = S.statsData.length;
+  const wrap = document.getElementById('stats-table-wrap');
+  if (!S.statsData.length) {
+    wrap.innerHTML='<p style="color:#9ca3af;text-align:center;padding:2rem">No certificates found for selected filters</p>';
+    document.getElementById('export-hint').textContent='';
+    return;
+  }
+  const MAX_ROWS = 500;
+  const shown = S.statsData.slice(0, MAX_ROWS);
+  let html = '<div style="overflow-x:auto"><table><thead><tr>'+
+    '<th>Code</th><th>Name</th><th>Email</th><th>Course</th><th>Project</th>'+
+    '<th>Alumni</th><th>Gender</th><th>Country</th><th>Center</th><th>Template</th>'+
+    '<th>Created</th><th>Sent</th><th>Type</th>'+
+    '</tr></thead><tbody>';
+  shown.forEach(row => {
+    html += `<tr>
+      <td class="td-code">${esc(row.code)}</td>
+      <td class="td-name">${esc(fullName(row))}</td>
+      <td class="td-email">${esc(row.email)}</td>
+      <td>${esc(row.course)}</td>
+      <td style="font-size:.76rem">${esc(row.projectType)||'–'}</td>
+      <td style="font-size:.76rem">${esc(row.alumniType)||'–'}</td>
+      <td>${esc(row.gender)||'–'}</td>
+      <td>${esc(row.country)||'–'}</td>
+      <td style="font-size:.76rem">${esc(row.center)||'–'}</td>
+      <td style="font-size:.76rem;color:#6b7280">${esc(row.templateName)||'–'}</td>
+      <td>${esc(row.createdAt)}</td>
+      <td>${esc(row.sentAt)}</td>
+      <td>${typePill(row.isTest)}</td>
+    </tr>`;
+  });
+  html += '</tbody></table></div>';
+  if (S.statsData.length > MAX_ROWS)
+    html += '<p style="font-size:.75rem;color:#6b7280;margin-top:.5rem">Showing first '+MAX_ROWS+' rows — export to see all '+S.statsData.length+'.</p>';
+  wrap.innerHTML = html;
+  document.getElementById('export-hint').textContent = S.statsData.length+' records ready to export';
+}
+
+function renderAggregations(s) {
+  const grid = document.getElementById('aggGrid');
+  const sections = [
+    { title:'By Project Type',   data: s.byProjectType },
+    { title:'By Alumni Type',    data: s.byAlumniType },
+    { title:'By Gender',         data: s.byGender },
+    { title:'By Country',        data: (s.byCountry||[]).slice(0,8) },
+    { title:'By Center',         data: (s.byCenter||[]).slice(0,8) },
+    { title:'By Studies Type',   data: (s.byStudiesType||[]).slice(0,8) },
+  ];
+  grid.innerHTML = sections.map(sec => {
+    if (!sec.data || !sec.data.length) return '';
+    const max = sec.data.reduce((m,r) => Math.max(m,r.count),1);
+    const bars = sec.data.map(item => `
+      <div class="agg-bar">
+        <span class="agg-label" title="${esc(item.label)}">${esc(item.label)}</span>
+        <div class="agg-track"><div class="agg-fill" style="width:${Math.round(item.count/max*100)}%"></div></div>
+        <span class="agg-count">${item.count}</span>
+      </div>`).join('');
+    return `<div class="agg-card"><div class="agg-title">${sec.title}</div>${bars}</div>`;
+  }).join('');
+}
+
+function renderQuality(q) {
+  const kpiColor = pct => pct>=90?'green':pct>=70?'amber':'red';
+  document.getElementById('qualityGrid').innerHTML = `
+    <div class="quality-kpi"><div class="quality-kpi-val ${kpiColor(q.pctValidEmails)}">${q.pctValidEmails}%</div><div class="quality-kpi-label">Valid Emails</div></div>
+    <div class="quality-kpi"><div class="quality-kpi-val ${kpiColor(q.pctHasPhone)}">${q.pctHasPhone}%</div><div class="quality-kpi-label">Has Phone</div></div>
+    <div class="quality-kpi"><div class="quality-kpi-val ${kpiColor(q.pctValidPhones)}">${q.pctValidPhones}%</div><div class="quality-kpi-label">Valid Phones</div></div>
+    <div class="quality-kpi"><div class="quality-kpi-val" style="color:#1e3a8a;font-size:1.6rem">${q.totalRecords}</div><div class="quality-kpi-label">Total Records</div></div>
+  `;
+  const mf = q.missingByField || {};
+  const mfKeys = Object.keys(mf);
+  document.getElementById('missingFields').innerHTML = mfKeys.length
+    ? '<strong style="color:#92400e">Missing values by field:</strong> '+
+      mfKeys.map(k => `<span style="margin-left:.5rem">${esc(k)}: <strong>${mf[k]}</strong></span>`).join('')
+    : '<span style="color:#065f46">✓ No significant missing values</span>';
+
+  const dupSec = document.getElementById('dupSection');
+  const dups = [].concat(
+    (q.dupEmails||[]).map(d => ({ type:'Email', ...d })),
+    (q.dupDnis||[]).map(d => ({ type:'DNI', ...d }))
+  );
+  if (dups.length) {
+    dupSec.style.display='block';
+    document.getElementById('dupTableWrap').innerHTML =
+      '<table class="dup-table"><thead><tr><th>Field</th><th>Value</th><th>Count</th></tr></thead><tbody>'+
+      dups.map(d=>`<tr><td>${d.type}</td><td>${esc(d.value)}</td><td style="font-weight:700;color:#991b1b">${d.count}</td></tr>`).join('')+
+      '</tbody></table>';
+  } else { dupSec.style.display='none'; }
+}
+
+const EXPORT_HEADERS = ['Code','Name','Last_Name','Email','Phone','Course','Course_Date','Project_Type','Alumni_Type',
+  'Gender','Country','Center','University_Company','Studies_Type','Company','Position','DNI','Birth_Date',
+  'Template','Created_Date','Send_Date','Is_Preprinted','Type'];
+function exportRows() {
+  return S.statsData.map(r => [
+    r.code, r.name, r.lastName||'', r.email, r.phone||'',
+    r.course, r.date||'', r.projectType||'', r.alumniType||'',
+    r.gender||'', r.country||'', r.center||'', r.uniCompany||'',
+    r.studiesType||'', r.company||'', r.position||'', r.dni||'', r.birthDate||'',
+    r.templateName||'', r.createdAt, r.sentAt,
+    r.preprinted?'Yes':'No', r.isTest?'Test':'Official',
+  ]);
+}
+
+/** Prevents CSV/Excel formula injection from participant data. */
+function csvSafe(cell) {
+  let s = String(cell == null ? '' : cell);
+  if (/^[=+\-@]/.test(s) && !/^[+\-]?\d[\d\s]*$/.test(s)) s = "'" + s;
+  return s;
+}
+
+async function exportData(format) {
+  if (!S.statsData||!S.statsData.length) { alert('No data to export. Apply filters first.'); return; }
+  const fname = 'Certificates_Export_'+localDateStr(new Date());
+  if (format === 'xlsx') {
+    try { await loadXLSX(); } catch (e) { alert('Could not load Excel library. Use CSV export.'); return; }
+    const ws = XLSX.utils.aoa_to_sheet([EXPORT_HEADERS].concat(exportRows().map(r => r.map(csvSafe))));
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Certificates');
+    XLSX.writeFile(wb, fname+'.xlsx');
+    return;
+  }
+  const lines = [EXPORT_HEADERS.join(',')].concat(
+    exportRows().map(row => row.map(cell => '"'+csvSafe(cell).replace(/"/g,'""')+'"').join(','))
+  );
+  triggerDownload(new Blob(['﻿'+lines.join('\r\n')],{type:'text/csv;charset=utf-8;'}), fname+'.csv');
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// VERIFY
+// ═══════════════════════════════════════════════════════════════════════════
+async function doVerify() {
+  const c = document.getElementById('vCode').value.toUpperCase().replace(/\s+/g,'').trim();
+  if (!c) return;
+  document.getElementById('certActionsCard').style.display = 'none';
+  S.verifiedCert = null;
+  showLoad('Verifying…');
+  const box = document.getElementById('verifyResult');
+  try {
+    const r = await gs('verifyCertificate', c, S.user);
+    if (r.valid) {
+      const t = r.certificate;
+      const badge = r.isTest
+        ? '<div class="vr-badge-test">⚠️ TEST Certificate</div>'
+        : '<div class="vr-badge-ok">✓ Valid Certificate</div>';
+      const fn = fullName(t);
+      box.innerHTML = `<div>${badge}<div><div class="vr-code">${esc(t.code)}</div></div>
+        <div class="vr-detail">
+          ${vrow('Name', fn)}
+          ${vrow('Course', t.course)}
+          ${vrow('Date', t.date)}
+          ${t.center      ? vrow('Center', t.center)       : ''}
+          ${t.hours       ? vrow('Hours', t.hours + 'h')   : ''}
+          ${t.country     ? vrow('Country', t.country)     : ''}
+          ${t.projectType ? vrow('Project', t.projectType) : ''}
+          ${t.alumniType  ? vrow('Alumni', t.alumniType)   : ''}
+        </div></div>`;
+
+      S.verifiedCert = t;
+      document.getElementById('actionsCardTitle').textContent = 'Actions — ' + fn + ' (' + t.course + ')';
+      document.getElementById('certActionsCard').style.display = 'block';
+
+      const dlBtn = document.getElementById('btnDownloadCert');
+      dlBtn.href = /^https?:\/\//i.test(t.url||'') ? t.url : '#';
+      dlBtn.style.display = t.url ? 'inline-flex' : 'none';
+
+      document.getElementById('resendEmail').value = t.email || '';
+      const ar = document.getElementById('a-resend');
+      ar.className = 'alert-box';
+      ar.textContent = '';
+    } else {
+      box.innerHTML = `<div><div class="vr-badge-err">✗ Not Found</div>
+        <p style="color:#6b7280;margin-top:.75rem;font-size:.85rem">${esc(r.error || 'Code not registered')}</p></div>`;
+    }
+  } catch (err) {
+    box.innerHTML = '<div class="vr-empty">⚠️ Error: ' + esc(err.message) + '</div>';
+  } finally {
+    hideLoad();
+  }
+}
+
+async function resendCert() {
+  if (!S.verifiedCert) return;
+  const email = document.getElementById('resendEmail').value.trim();
+  if (!email || !EMAIL_RE.test(email))
+    return showAlert('a-resend', 'Enter a valid email address', 'err');
+  const btn = document.getElementById('btnResend');
+  btn.disabled = true;
+  showLoad('Sending certificate…');
+  try {
+    const r = await gs('resendCertificate', { code: S.verifiedCert.code, toEmail: email, accessCode: S.user });
+    if (r.success) showAlert('a-resend', '✓ Certificate resent to ' + email, 'ok');
+    else if (!handleAuthError(r.error)) showAlert('a-resend', r.error || 'Error sending', 'err');
+  } catch (err) {
+    showAlert('a-resend', 'Error: ' + err.message, 'err');
+  } finally {
+    hideLoad(); btn.disabled = false;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// REPORT
+// ═══════════════════════════════════════════════════════════════════════════
+async function submitReport() {
+  const certName=v('rpt-certname').trim(), courseCode=v('rpt-coursecode').trim();
+  const reqDate=v('rpt-reqdate').trim(), reqBy=v('rpt-reqby').trim(), reason=v('rpt-reason').trim();
+  if (!certName||!courseCode||!reqDate||!reqBy||!reason)
+    return showAlert('a-report','All fields are required','err');
+  const btn = document.getElementById('btnReport');
+  btn.disabled = true; showLoad('Submitting report…');
+  try {
+    const r = await gs('submitReport', { certName, courseCode, reqDate, reqBy, reason, accessCode: S.user });
+    if (r.success) {
+      showAlert('a-report','✓ Report submitted. Ticket ID: '+r.ticketId+'. The Digital Products Department will be notified.','ok');
+      ['rpt-certname','rpt-coursecode','rpt-reqby','rpt-reason'].forEach(clearField);
+      setNow('rpt-reqdate');
+    } else if (!handleAuthError(r.error)) { showAlert('a-report', r.error||'Error','err'); }
+  } catch (err) {
+    showAlert('a-report','Error: '+err.message,'err');
+  } finally {
+    hideLoad(); btn.disabled = false;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════════════════════════
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function fullName(r) { return [r.name, r.lastName].filter(Boolean).join(' '); }
+function typePill(isTest) {
+  return isTest ? '<span class="badge-pill pill-test">🧪 Test</span>' : '<span class="badge-pill pill-std">📜 Official</span>';
+}
+function vrow(k, val) {
+  return `<div class="vr-row"><span class="vr-key">${esc(k)}</span><span class="vr-val">${esc(val)||'–'}</span></div>`;
+}
+function v(id)          { return (document.getElementById(id)||{}).value||''; }
+function clearField(id) { const el=document.getElementById(id); if(el) el.value=''; }
+function markInvalid(id){ const el=document.getElementById(id); if(el) el.classList.add('invalid'); }
+/** Text is escaped unless isHtml=true (only for messages built with esc()). */
+function showAlert(id, msg, type, isHtml) {
+  const el = document.getElementById(id); if(!el) return;
+  el.className = 'alert-box '+type+' show';
+  if (isHtml) el.innerHTML = msg; else el.textContent = msg;
+  el.scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+function showLoad(txt) {
+  document.getElementById('loadTxt').textContent = txt||'Processing…';
+  document.getElementById('loader').classList.add('on');
+}
+function hideLoad() {
+  document.getElementById('loader').classList.remove('on');
+  document.getElementById('loadBar').classList.remove('on');
+}
+function setProgress(pct) {
+  document.getElementById('loadBar').classList.add('on');
+  document.getElementById('loadBarFill').style.width = pct+'%';
+}
+function triggerDownload(blob, filename) {
+  const url=URL.createObjectURL(blob), a=document.createElement('a');
+  a.href=url; a.download=filename;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+function localDateStr(d) {
+  const pad = n => String(n).padStart(2,'0');
+  return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+}
+document.addEventListener('input', e => { if (e.target.classList) e.target.classList.remove('invalid'); });
+</script>
+</body>
+</html>
