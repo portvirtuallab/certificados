@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>CertManager Pro v7.1 — Escola Europea</title>
+<title>CertManager Pro v7.2 — Escola Europea</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -249,7 +249,7 @@ tbody tr:hover{background:#f9fafb}
       <div class="icon">🎓</div>
       <div>
         <div class="school-name">Escola Europea Intermodal Transport</div>
-        <div class="sys-name">CertManager Pro v7.1</div>
+        <div class="sys-name">CertManager Pro v7.2</div>
       </div>
     </div>
     <div class="login-label">Enter your access code</div>
@@ -270,7 +270,7 @@ tbody tr:hover{background:#f9fafb}
     <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
       <div class="topbar-logo">
         <div class="t-icon">🎓</div>
-        <div><span class="t-brand">CertManager Pro v7.1</span><span class="t-sub">Escola Europea</span></div>
+        <div><span class="t-brand">CertManager Pro v7.2</span><span class="t-sub">Escola Europea</span></div>
       </div>
       <nav class="topbar-nav">
         <button class="nav-btn active" id="nav-dashboard"  onclick="showView('dashboard')">Dashboard</button>
@@ -774,8 +774,8 @@ tbody tr:hover{background:#f9fafb}
 // ═══════════════════════════════════════════════════════════════════════════
 // CONSTANTS
 // ═══════════════════════════════════════════════════════════════════════════
-const BULK_BATCH_SIZE = 30;   // 1 PDF per record
-const PP_BATCH_SIZE   = 15;   // 2 PDFs per record
+const BULK_BATCH_SIZE = 20;   // max rows per call (server also stops on time budget)
+const PP_BATCH_SIZE   = 10;   // 2 PDFs per record
 
 const EMAIL_RE = /\S+@\S+\.\S+/;
 const PHONE_RE = /^[\d\s\+\-\(\)\.]{6,20}$/;
@@ -1172,7 +1172,21 @@ async function genSingle() {
   const btn = document.getElementById('btnSingle');
   btn.disabled = true; showLoad(isTest ? 'Generating test preview…':'Generating…');
   try {
-    const r = await gs('generateSingleCertificate', d);
+    let r = await gs('generateSingleCertificate', d);
+    if (!r.success && r.duplicate) {
+      hideLoad();
+      const again = confirm('⚠ This person already has a certificate for this course and date:\n\n' + r.existingCode +
+        '\n\nYou can resend it from "Verify" instead.\n\nIssue a NEW, second certificate anyway?');
+      if (!again) {
+        showAlert('a-single', 'No new certificate issued. Existing code: <strong>' + esc(r.existingCode) + '</strong>' +
+          (r.existingUrl ? ' · <a href="' + esc(r.existingUrl) + '" target="_blank" rel="noopener">Open PDF</a>' : '') +
+          ' — use <strong>Verify → Resend</strong> to send it again.', 'warn', true);
+        return;
+      }
+      showLoad('Generating…');
+      d.allowDuplicate = true;
+      r = await gs('generateSingleCertificate', d);
+    }
     if (r.success) {
       const label = r.isTest ? ' [TEST]':'';
       let msg = '✓ Certificate generated'+label+' · Code: <strong>'+esc(r.code)+'</strong>';
@@ -1371,89 +1385,192 @@ function renderCsvValidation(divId, rawHeaders, map, unknown, missing, issues) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// BATCH RUNNER — splits records so each server call stays under the 6-min limit
+// JOB RUNNER — v7.2
+//  • The server stops each call before Google's 6-minute limit and reports
+//    how many rows it processed; we continue from there.
+//  • Network errors / timeouts are retried automatically. This is safe:
+//    the server never issues a second certificate for the same person,
+//    course and date (it reuses the existing one).
+//  • The coordinator package is sent ONCE at the end (finishGenerationJob).
 // ═══════════════════════════════════════════════════════════════════════════
-async function runInBatches(records, size, label, sendBatch) {
-  const total = records.length, batches = Math.ceil(total/size);
-  const res = { ok:0, fail:0, errors:[], batches, aborted:false };
+const MAX_RETRIES = 3;
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+let _jobRunning = false;
+
+function newJobId() {
+  return 'J' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+}
+
+function warnBeforeLeaving(e) {
+  e.preventDefault();
+  e.returnValue = 'Certificates are being generated. If you leave, the job stops.';
+  return e.returnValue;
+}
+
+async function runJob(records, size, label, sendCall) {
+  const jobId = newJobId();
+  const total = records.length;
+  const res = {
+    jobId, ok: 0, reused: 0, fail: 0, errors: [], warnings: [],
+    fileIds: [], keys: [], calls: 0, aborted: false, busyMsg: '',
+  };
+  let offset = 0, retries = 0;
+  _jobRunning = true;
+  window.addEventListener('beforeunload', warnBeforeLeaving);
   setProgress(0);
-  for (let b = 0; b < batches; b++) {
-    const start = b*size, end = Math.min(start+size, total);
-    showLoad(label+' '+end+' of '+total+'… (batch '+(b+1)+'/'+batches+')');
-    try {
-      const r = await sendBatch(records.slice(start,end), {
-        rowOffset: start,
-        batchLabel: batches > 1 ? '(part '+(b+1)+'/'+batches+')' : '',
-      });
-      if (r && r.success) {
-        res.ok += r.count||0; res.fail += r.errors||0;
-        if (r.errorDetails && r.errorDetails.length) res.errors.push(...r.errorDetails);
-      } else {
-        res.fail += end-start;
-        res.errors.push('Batch '+(b+1)+': '+((r&&r.error)||'unknown error'));
-        if (r && /unauthorized/i.test(r.error||'')) { res.aborted = true; break; }
+  try {
+    while (offset < total) {
+      const slice = records.slice(offset, offset + size);
+      showLoad(label + ' — ' + offset + ' of ' + total + ' done… Please keep this tab open.');
+      let r;
+      try {
+        r = await sendCall(slice, { rowOffset: offset, jobId });
+      } catch (err) {
+        // Timeout / connection lost. Rows already processed were saved and will be reused, not duplicated.
+        if (retries < MAX_RETRIES) {
+          retries++;
+          for (let s = 30; s > 0; s--) {
+            showLoad('No answer from the server (attempt ' + retries + '/' + MAX_RETRIES + '). Resuming in ' + s +
+                     ' s… Certificates already generated will NOT be duplicated.');
+            await sleep(1000);
+          }
+          continue;
+        }
+        res.fail += slice.length;
+        res.errors.push('Rows ' + (offset + 1) + '–' + (offset + slice.length) + ': ' + err.message);
+        offset += slice.length; retries = 0;
+        continue;
       }
-    } catch (err) {
-      res.fail += end-start;
-      res.errors.push('Batch '+(b+1)+' failed: '+err.message);
+      retries = 0;
+      res.calls++;
+      if (r && r.claimedKeys) r.claimedKeys.forEach(k => { if (!res.keys.includes(k)) res.keys.push(k); });
+      if (!r || !r.success) {
+        if (r && r.busy) { res.aborted = true; res.busyMsg = r.error; break; }
+        if (r && /unauthorized/i.test(r.error || '')) { res.aborted = true; res.busyMsg = 'unauthorized'; break; }
+        res.fail += slice.length;
+        res.errors.push('Rows ' + (offset + 1) + '–' + (offset + slice.length) + ': ' + ((r && r.error) || 'unknown error'));
+        offset += slice.length;
+        continue;
+      }
+      res.ok     += r.count  || 0;
+      res.reused += r.reused || 0;
+      res.fail   += r.errors || 0;
+      if (r.errorDetails) res.errors.push(...r.errorDetails);
+      if (r.warnings)     res.warnings.push(...r.warnings);
+      if (r.deliveryFileIds) res.fileIds.push(...r.deliveryFileIds);
+      offset += Math.max(1, Number(r.processed) || slice.length);
+      setProgress(Math.round(offset / total * 100));
     }
-    setProgress(Math.round(end/total*100));
+  } finally {
+    window.removeEventListener('beforeunload', warnBeforeLeaving);
+    _jobRunning = false;
   }
-  hideLoad();
   return res;
 }
 
-function batchSummary(res, noun, isTest) {
+/** Sends the coordinator package once and releases the course lock. */
+async function finishJob(res, extra) {
+  showLoad('Sending the package to the coordinator…');
+  try {
+    return await gs('finishGenerationJob', Object.assign({
+      accessCode: S.user, jobId: res.jobId, claimedKeys: res.keys, deliveryFileIds: res.fileIds,
+    }, extra));
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+}
+
+function jobSummary(res, noun, isTest, delivery) {
   const label = isTest ? ' [TEST]' : '';
-  let msg = '✓ Generated '+res.ok+' '+noun+label+
-            (res.fail ? ' · '+res.fail+' errors' : '')+
-            (res.batches > 1 ? ' ('+res.batches+' batches)' : '');
-  if (res.errors.length) msg += '<div class="err-detail">'+esc(res.errors.join('\n'))+'</div>';
+  let msg = '✓ ' + res.ok + ' new ' + noun + label;
+  if (res.reused) msg += ' · ' + res.reused + ' already existed (reused, not duplicated)';
+  if (res.fail)   msg += ' · <strong>' + res.fail + ' errors</strong>';
+  if (delivery) {
+    if (delivery.success && delivery.files)
+      msg += '<br>📧 Coordinator package sent: ' + delivery.files + ' files in ' + delivery.parts + ' e-mail' + (delivery.parts > 1 ? 's' : '') + '.';
+    else if (delivery && !delivery.success)
+      msg += '<br>⚠ The coordinator e-mail could not be sent: ' + esc(delivery.error) + ' — run the same CSV again to resend (nothing will be duplicated).';
+  }
+  const details = res.errors.concat(res.warnings);
+  if (details.length) msg += '<div class="err-detail">' + esc(details.join('\n')) + '</div>';
   return msg;
+}
+
+function busyMessage(res, alertId) {
+  if (res.busyMsg === 'unauthorized') { handleAuthError('unauthorized'); return true; }
+  if (res.busyMsg) {
+    showAlert(alertId, '⏳ ' + esc(res.busyMsg) + (res.ok || res.reused ? '<br>Processed before stopping: ' + res.ok + ' new, ' + res.reused + ' existing.' : ''), 'warn', true);
+    return true;
+  }
+  return false;
+}
+
+function firstCourseInfo(rows, rawHeaders) {
+  const map = buildHeaderMapClient(rawHeaders).map;
+  const r = rows[0] || [];
+  return { course: map.course_code !== undefined ? r[map.course_code] : '', date: map.date !== undefined ? r[map.date] : '' };
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
 // GENERATE — BULK
 // ═══════════════════════════════════════════════════════════════════════════
 async function genBulk() {
+  if (_jobRunning) return;
   const tmpl = v('b-tmpl'), mode = document.getElementById('b-sendmode').value;
   const coord = v('b-coordemail').trim(), isTest = document.getElementById('b-testmode').checked;
   if (!tmpl)        return showAlert('a-bulk','Select a template','err');
   if (!S.bulkData)  return showAlert('a-bulk','Upload CSV first','err');
   if (mode==='coordinator' && !EMAIL_RE.test(coord)) return showAlert('a-bulk','Enter a valid coordinator email','err');
+
+  if (mode === 'individual') {
+    try {
+      const quota = await gs('getMailQuota', S.user);
+      if (typeof quota === 'number' && quota < S.bulkData.length &&
+          !confirm('Google only allows ' + quota + ' more e-mails today, but this CSV has ' + S.bulkData.length +
+                   ' people. Certificates will be generated, but some e-mails will NOT be sent today.\n\nContinue anyway?')) return;
+    } catch (e) { /* quota check is informative only */ }
+  }
   if (!isTest && mode==='individual' &&
       !confirm('This will generate and e-mail '+S.bulkData.length+' official certificates. Continue?')) return;
 
   const tmplName = selectedText('b-tmpl');
   const survey   = v('b-survey').trim();
+  const rows = S.bulkData, rawHeaders = S.bulkRawHeaders;
   const btn = document.getElementById('btnBulk');
   btn.disabled = true;
 
-  const res = await runInBatches(S.bulkData, BULK_BATCH_SIZE, 'Processing', (batch, info) =>
+  const res = await runJob(rows, BULK_BATCH_SIZE, 'Generating certificates', (batch, info) =>
     gs('generateBulkCertificates', {
-      records: batch, rawHeaders: S.bulkRawHeaders,
+      records: batch, rawHeaders,
       template: tmpl, templateName: tmplName,
       accessCode: S.user, surveyLink: survey,
       sendMode: mode, coordinatorEmail: coord, testMode: isTest,
-      rowOffset: info.rowOffset, batchLabel: info.batchLabel,
+      rowOffset: info.rowOffset, jobId: info.jobId,
     })
   );
 
+  const ci = firstCourseInfo(rows, rawHeaders);
+  const delivery = await finishJob(res, {
+    kind: 'bulk', coordinatorEmail: mode === 'coordinator' ? coord : '', course: ci.course, date: ci.date, isTest,
+  });
+  hideLoad();
   btn.disabled = false;
-  if (res.aborted && handleAuthError('unauthorized')) return;
-  showAlert('a-bulk', batchSummary(res, 'certificates', isTest), (isTest || res.fail) ? 'warn' : 'ok', true);
-  if (res.ok > 0) {
+  if (busyMessage(res, 'a-bulk')) return;
+  showAlert('a-bulk', jobSummary(res, 'certificates', isTest, mode === 'coordinator' ? delivery : null),
+            (isTest || res.fail || res.warnings.length) ? 'warn' : 'ok', true);
+  if (res.ok + res.reused > 0 && !res.fail) {
     S.bulkData = null; S.bulkRawHeaders = null;
     resetCsvUi('bulk');
     clearField('b-survey');
-    if (!isTest) loadDashboard();
   }
+  if (!isTest) loadDashboard();
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
 // GENERATE — PREPRINTED CSV
 // ═══════════════════════════════════════════════════════════════════════════
 async function genPreprintedCSV() {
+  if (_jobRunning) return;
   const tmplSave  = v('pp-tmpl-save'), tmplPrint = v('pp-tmpl-print');
   const coord     = v('pp-coordemail').trim();
   if (!tmplSave)  return showAlert('a-preprinted-csv','Select the "To Save" template','err');
@@ -1464,30 +1581,33 @@ async function genPreprintedCSV() {
   const saveName  = selectedText('pp-tmpl-save');
   const printName = selectedText('pp-tmpl-print');
   const survey    = v('pp-survey').trim();
+  const rows = S.ppData, rawHeaders = S.ppRawHeaders;
   const btn = document.getElementById('btnPreprintedCSV');
   btn.disabled = true;
 
-  const res = await runInBatches(S.ppData, PP_BATCH_SIZE, 'Generating preprinted', (batch, info) =>
+  const res = await runJob(rows, PP_BATCH_SIZE, 'Generating preprinted certificates', (batch, info) =>
     gs('generatePreprintedCSV', {
-      records: batch, rawHeaders: S.ppRawHeaders,
+      records: batch, rawHeaders,
       templateToSave: tmplSave, templateToPrint: tmplPrint,
       templateToSaveName: saveName, templateToPrintName: printName,
       surveyLink: survey, coordinatorEmail: coord, accessCode: S.user,
-      rowOffset: info.rowOffset, batchLabel: info.batchLabel,
+      rowOffset: info.rowOffset, jobId: info.jobId,
     })
   );
 
+  const ci = firstCourseInfo(rows, rawHeaders);
+  const delivery = await finishJob(res, { kind: 'preprinted', coordinatorEmail: coord, course: ci.course, date: ci.date });
+  hideLoad();
   btn.disabled = false;
-  if (res.aborted && handleAuthError('unauthorized')) return;
-  let msg = batchSummary(res, 'certificate pairs', false);
-  if (res.ok) msg = msg.replace('pairs', 'pairs. Print-only ZIP'+(res.batches>1?'s':'')+' sent to coordinator');
-  showAlert('a-preprinted-csv', msg, res.fail ? 'warn' : 'ok', true);
-  if (res.ok > 0) {
+  if (busyMessage(res, 'a-preprinted-csv')) return;
+  showAlert('a-preprinted-csv', jobSummary(res, 'certificate pairs', false, delivery),
+            (res.fail || !delivery.success) ? 'warn' : 'ok', true);
+  if (res.ok + res.reused > 0 && !res.fail && delivery.success) {
     S.ppData = null; S.ppRawHeaders = null;
     resetCsvUi('pp');
     clearField('pp-survey'); clearField('pp-coordemail');
-    loadDashboard();
   }
+  loadDashboard();
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1529,7 +1649,7 @@ async function dlSampleXLSX() {
 
   const DOC_URL = 'https://docs.google.com/document/d/1pu0MQjEUa25jpSmwA2DbeRsYZQbkXQJODzdTueMJQ4I/edit?usp=sharing';
   const data = [
-    ['CertManager Pro v7.1 — Import Template'],
+    ['CertManager Pro v7.2 — Import Template'],
     [''],
     ['FIELD', 'DESCRIPTION', 'VALID VALUES / EXAMPLE'],
     ['Name *', 'First name', 'María'],
