@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Certificate Verification — Escola Europea Intermodal Transport</title>
+<meta name="description" content="Verify the authenticity of certificates issued by Escola Europea Intermodal Transport.">
+<meta property="og:title" content="Certificate Verification — Escola Europea Intermodal Transport">
+<meta property="og:description" content="Verify the authenticity of certificates issued by Escola Europea Intermodal Transport.">
+<meta property="og:image" content="https://portvirtuallab.github.io/certificados/assets/escola-logo-white-bg.png">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#034DA2">
+<link rel="icon" type="image/png" href="../assets/escola-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand:#034DA2; --brand-2:#0a63c9; --navy:#06224d;
+  --ok:#0f9d6b; --ok-bg:#e7f8f1; --ok-bd:#9fe3c8;
+  --warn:#a15c00; --warn-bg:#fff6e5; --warn-bd:#ffd48a;
+  --err:#c62828; --err-bg:#fdecec; --err-bd:#f5b5b5;
+  --bg:#f3f6fb; --card:#ffffff; --ink:#0f1b2d; --mu:#5b6b82; --line:#e3e9f2; --chip:#eef3fb;
+  --shadow:0 20px 60px -20px rgba(3,77,162,.28), 0 2px 8px rgba(15,27,45,.06);
+  --rainbow:linear-gradient(90deg,#c62828,#e8457c,#f39c12,#f6c90e,#2e9d4f,#1aa3b8,#034DA2);
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#071224; --card:#0e1d36; --ink:#e8eef8; --mu:#9fb0c8; --line:#1f3352; --chip:#132a4b;
+    --ok-bg:#0c2f26; --ok-bd:#1d6b52; --warn-bg:#33240a; --warn-bd:#7a5512; --err-bg:#3a1414; --err-bd:#7d2b2b;
+    --shadow:0 20px 60px -20px rgba(0,0,0,.6);
+  }
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;
+  display:flex;flex-direction:column;overflow-x:hidden}
+a{color:inherit}
+.hero{position:relative;background:radial-gradient(1200px 500px at 15% -10%,#0a63c9 0%,transparent 60%),
+  radial-gradient(900px 400px at 100% 0%,#0b3f86 0%,transparent 55%),var(--navy);
+  color:#fff;padding:22px 16px 120px;overflow:hidden}
+.hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:5px;background:var(--rainbow)}
+.hero .stars{position:absolute;inset:0;pointer-events:none;opacity:.12;
+  background-image:radial-gradient(circle at 20% 30%,#fff 1.5px,transparent 2px),radial-gradient(circle at 70% 20%,#fff 1.5px,transparent 2px),
+  radial-gradient(circle at 85% 60%,#fff 1.2px,transparent 2px),radial-gradient(circle at 40% 70%,#fff 1px,transparent 2px);
+  background-size:220px 160px}
+.topbar{max-width:880px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;position:relative;z-index:1}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.brand-badge{width:54px;height:54px;border-radius:16px;background:#fff;display:grid;place-items:center;
+  box-shadow:0 8px 24px rgba(0,0,0,.25);flex-shrink:0}
+.brand-badge img{width:46px;height:46px;object-fit:contain}
+.brand-txt b{display:block;font-size:.95rem;font-weight:800;letter-spacing:.01em}
+.brand-txt span{display:block;font-size:.72rem;opacity:.75;font-weight:500}
+.lang{display:flex;background:rgba(255,255,255,.12);border-radius:999px;padding:3px;backdrop-filter:blur(6px)}
+.lang button{border:0;background:transparent;color:#fff;font:600 .72rem 'Plus Jakarta Sans',sans-serif;
+  padding:6px 10px;border-radius:999px;cursor:pointer;opacity:.8}
+.lang button[aria-pressed="true"]{background:#fff;color:var(--brand);opacity:1}
+.hero-copy{max-width:880px;margin:44px auto 0;position:relative;z-index:1}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;background:rgba(255,255,255,.12);padding:6px 12px;border-radius:999px}
+.hero h1{font-size:clamp(1.8rem,5vw,2.8rem);font-weight:800;line-height:1.1;margin:14px 0 10px;letter-spacing:-.02em}
+.hero p{max-width:560px;opacity:.85;font-size:1rem;line-height:1.6}
+
+main{flex:1;max-width:880px;width:100%;margin:-84px auto 0;padding:0 16px 48px;position:relative;z-index:2}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:26px}
+.search label{display:block;font-size:.78rem;font-weight:700;color:var(--mu);margin-bottom:10px;letter-spacing:.04em;text-transform:uppercase}
+.search-row{display:flex;gap:10px}
+.input-wrap{flex:1;position:relative;min-width:0}
+.input-wrap svg{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--mu)}
+#code{width:100%;height:58px;border:2px solid var(--line);border-radius:16px;background:var(--bg);color:var(--ink);
+  font:600 1.05rem 'JetBrains Mono',monospace;letter-spacing:.06em;text-transform:uppercase;padding:0 16px 0 48px;outline:none;
+  transition:border-color .2s,box-shadow .2s,background .2s}
+#code::placeholder{color:var(--mu);opacity:.6;letter-spacing:.04em}
+#code:focus{border-color:var(--brand-2);box-shadow:0 0 0 5px rgba(10,99,201,.15);background:var(--card)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:58px;padding:0 24px;border:0;border-radius:16px;
+  font:700 .95rem 'Plus Jakarta Sans',sans-serif;cursor:pointer;text-decoration:none;transition:transform .12s,filter .2s,background .2s;white-space:nowrap}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:linear-gradient(135deg,var(--brand-2),var(--brand));color:#fff;box-shadow:0 8px 20px -6px rgba(3,77,162,.6)}
+.btn-primary:hover{filter:brightness(1.08)}
+.btn-primary:disabled{opacity:.6;cursor:wait}
+.hint{margin-top:12px;font-size:.8rem;color:var(--mu)}
+.hint code{font-family:'JetBrains Mono',monospace;background:var(--chip);padding:2px 6px;border-radius:6px;color:var(--ink)}
+@media (max-width:560px){.search-row{flex-direction:column}.btn-primary{width:100%}.card{padding:20px}}
+
+#result{margin-top:22px}
+.state{border-radius:22px;border:1px solid var(--line);background:var(--card);box-shadow:var(--shadow);overflow:hidden;animation:rise .45s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* valid */
+.cert-head{position:relative;padding:28px 26px 24px;background:linear-gradient(135deg,var(--ok-bg),var(--card));border-bottom:1px solid var(--line);
+  display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center}
+.cert-head.test{background:linear-gradient(135deg,var(--warn-bg),var(--card))}
+.seal{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;position:relative;
+  background:conic-gradient(from 0deg,#c62828,#e8457c,#f39c12,#f6c90e,#2e9d4f,#1aa3b8,#034DA2,#c62828);animation:spin 8s linear infinite}
+.seal::before{content:"";position:absolute;inset:5px;border-radius:50%;background:var(--card)}
+.seal svg{position:relative;width:38px;height:38px}
+.seal .check{stroke:var(--ok);stroke-width:3.2;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:40;stroke-dashoffset:40;animation:draw .7s .25s ease forwards}
+.test .seal{background:conic-gradient(#f39c12,#f6c90e,#f39c12)}
+.test .seal .check{stroke:var(--warn)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.seal svg{animation:spin 8s linear infinite reverse}
+@keyframes draw{to{stroke-dashoffset:0}}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+  padding:5px 10px;border-radius:999px;background:var(--ok);color:#fff}
+.test .badge{background:var(--warn)}
+.cert-name{font-size:clamp(1.4rem,4vw,1.9rem);font-weight:800;margin-top:8px;line-height:1.15;letter-spacing:-.01em}
+.cert-course{color:var(--mu);margin-top:4px;font-weight:600}
+.cert-code{display:inline-block;margin-top:10px;font:600 .82rem 'JetBrains Mono',monospace;letter-spacing:.06em;
+  background:var(--chip);padding:5px 10px;border-radius:8px;word-break:break-all}
+@media (max-width:520px){.cert-head{grid-template-columns:1fr;text-align:left}.seal{width:64px;height:64px}}
+
+.details{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1px;background:var(--line)}
+.detail{background:var(--card);padding:16px 22px}
+.detail dt{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mu)}
+.detail dd{margin-top:4px;font-weight:600;font-size:.98rem}
+
+.actions{padding:22px 26px;display:flex;flex-wrap:wrap;gap:10px;border-top:1px solid var(--line)}
+.btn-sm{height:46px;padding:0 18px;border-radius:12px;font-size:.88rem}
+.btn-ghost{background:var(--chip);color:var(--ink);border:1px solid var(--line)}
+.btn-ghost:hover{filter:brightness(.97)}
+.btn-li{background:#0A66C2;color:#fff}
+.btn-li:hover{background:#004182}
+.btn-li-outline{background:transparent;color:#0A66C2;border:2px solid #0A66C2}
+@media (prefers-color-scheme:dark){.btn-li-outline{color:#70b5f9;border-color:#70b5f9}}
+
+.share{padding:0 26px 26px;display:grid;grid-template-columns:1fr auto;gap:22px}
+@media (max-width:680px){.share{grid-template-columns:1fr}}
+.share h3{font-size:.8rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--mu);margin-bottom:10px}
+.post{width:100%;min-height:190px;resize:vertical;border:1.5px solid var(--line);border-radius:14px;background:var(--bg);color:var(--ink);
+  padding:14px;font:500 .9rem/1.55 'Plus Jakarta Sans',sans-serif;outline:none}
+.post:focus{border-color:var(--brand-2)}
+.post-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.qr-box{display:flex;flex-direction:column;align-items:center;gap:10px}
+#qr{background:#fff;padding:12px;border-radius:14px;border:1px solid var(--line);width:156px;height:156px}
+#qr img,#qr canvas{width:132px!important;height:132px!important}
+.qr-box small{color:var(--mu);font-size:.75rem;text-align:center;max-width:160px}
+
+/* not found / error */
+.msg{padding:30px 26px;display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:start}
+.msg .ico{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;font-size:1.5rem;font-weight:800}
+.msg.err{background:var(--err-bg);border-color:var(--err-bd)}
+.msg.err .ico{background:var(--err);color:#fff}
+.msg h2{font-size:1.15rem;font-weight:800}
+.msg p{margin-top:6px;color:var(--mu);line-height:1.55}
+
+/* skeleton */
+.skel{padding:26px}
+.sk{height:14px;border-radius:8px;background:linear-gradient(90deg,var(--chip),var(--line),var(--chip));background-size:200% 100%;animation:sh 1.2s infinite;margin-bottom:12px}
+@keyframes sh{to{background-position:-200% 0}}
+
+.how{margin-top:22px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:680px){.how{grid-template-columns:1fr}}
+.how div{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px}
+.how b{display:block;font-size:.92rem;margin:8px 0 4px}
+.how p{color:var(--mu);font-size:.84rem;line-height:1.5}
+.how i{font-style:normal;font-size:1.3rem}
+
+footer{text-align:center;padding:26px 16px 34px;color:var(--mu);font-size:.8rem;line-height:1.8}
+footer a{color:var(--brand-2);font-weight:600;text-decoration:none}
+@media (prefers-color-scheme:dark){footer a{color:#70b5f9}}
+
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,120%);background:var(--ink);color:var(--card);
+  padding:12px 18px;border-radius:12px;font-weight:600;font-size:.88rem;box-shadow:var(--shadow);transition:transform .3s,opacity .3s;z-index:50;max-width:calc(100% - 32px);
+  opacity:0;visibility:hidden}
+.toast.show{transform:translate(-50%,0);opacity:1;visibility:visible}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.seal .check{stroke-dashoffset:0}}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="stars"></div>
+  <div class="topbar">
+    <a class="brand" href="https://escolaeuropea.eu" target="_blank" rel="noopener">
+      <span class="brand-badge"><img src="../assets/escola-logo.png" alt="Escola Europea Intermodal Transport — 20 years"></span>
+      <span class="brand-txt"><b>Escola Europea</b><span>Intermodal Transport</span></span>
+    </a>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang="en">EN</button>
+      <button type="button" data-lang="es">ES</button>
+      <button type="button" data-lang="ca">CA</button>
+    </div>
+  </div>
+  <div class="hero-copy">
+    <span class="eyebrow">🔒 <span data-i18n="eyebrow">Official verification</span></span>
+    <h1 data-i18n="title">Certificate Verification</h1>
+    <p data-i18n="subtitle">Check in seconds that a certificate was genuinely issued by Escola Europea Intermodal Transport.</p>
+  </div>
+</header>
+
+<main>
+  <form class="card search" id="form" autocomplete="off">
+    <label for="code" data-i18n="label">Certificate code</label>
+    <div class="search-row">
+      <div class="input-wrap">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="code" name="code" maxlength="40" spellcheck="false" inputmode="text" placeholder="ESCOLA12345678EUROPEA" aria-describedby="hint">
+      </div>
+      <button class="btn btn-primary" id="go" type="submit">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3z"/><path d="m9 12 2 2 4-4"/></svg>
+        <span data-i18n="verify">Verify</span>
+      </button>
+    </div>
+    <p class="hint" id="hint"><span data-i18n="hint">The code is printed on the certificate:</span> <code>ESCOLA########EUROPEA</code></p>
+  </form>
+
+  <section id="result" aria-live="polite"></section>
+
+  <section class="how" id="how">
+    <div><i>🔎</i><b data-i18n="how1t">Enter the code</b><p data-i18n="how1">Type the code shown on the certificate or scan its QR.</p></div>
+    <div><i>✅</i><b data-i18n="how2t">Instant check</b><p data-i18n="how2">We confirm it against our official register of issued certificates.</p></div>
+    <div><i>💼</i><b data-i18n="how3t">Share it</b><p data-i18n="how3">Add it to your LinkedIn profile or share the news with your network.</p></div>
+  </section>
+</main>
+
+<footer>
+  © <span id="year"></span> Escola Europea Intermodal Transport · <a href="https://escolaeuropea.eu" target="_blank" rel="noopener">escolaeuropea.eu</a><br>
+  <span data-i18n="footer">Official certificate register</span>
+</footer>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+<script>
+const API_URL = 'https://script.google.com/macros/s/AKfycbyyupjWX7gBBPMDlUx9Ak0tIC84H1VH3_iiuot7kVdXoysPvWbOXh4deNgsVOvGmi4IKA/exec';
+const ORG = 'Escola Europea Intermodal Transport';
+const CODE_RE = /^(TEST-)?ESCOLA\d{8}EUROPEA$/;
+
+const T = {
+  en: {
+    eyebrow:'Official verification', title:'Certificate Verification',
+    subtitle:'Check in seconds that a certificate was genuinely issued by Escola Europea Intermodal Transport.',
+    label:'Certificate code', verify:'Verify', hint:'The code is printed on the certificate:',
+    how1t:'Enter the code', how1:'Type the code shown on the certificate or scan its QR.',
+    how2t:'Instant check', how2:'We confirm it against our official register of issued certificates.',
+    how3t:'Share it', how3:'Add it to your LinkedIn profile or share the news with your network.',
+    footer:'Official certificate register',
+    valid:'Verified certificate', test:'Test certificate — not officially issued',
+    awarded:'has successfully completed', course:'Course', date:'Date', hours:'Hours', center:'Training center',
+    country:'Country', program:'Programme', code:'Code', issued:'Issued',
+    download:'Download PDF', addLi:'Add to LinkedIn profile', shareLi:'Share on LinkedIn',
+    copyLink:'Copy verification link', copyPost:'Copy text',
+    postTitle:'Your LinkedIn post (you can edit it)', qrTitle:'QR code',
+    qrHelp:'Scan to verify this certificate', qrDl:'Download QR',
+    notFound:'Certificate not found',
+    notFoundTxt:'The code <b>{code}</b> is not in our register. Check that it is typed exactly as on the certificate. If the problem persists, contact us at escolaeuropea.eu.',
+    badFormat:'Invalid format', badFormatTxt:'Codes look like <b>ESCOLA12345678EUROPEA</b>.',
+    netErr:'We could not reach the register', netErrTxt:'Please check your connection and try again in a moment.',
+    copied:'Copied to clipboard ✓', linkCopied:'Verification link copied ✓',
+    liCopied:'Post text copied — paste it in LinkedIn if it does not appear automatically',
+    hoursUnit:'h',
+    post:'🎓 I am proud to share that I have successfully completed the {course} programme{hours} at {org}.\n\n{date}✅ Officially verified certificate: {link}\n\nThank you to the whole team at Escola Europea for this learning experience!\n\n#EscolaEuropea #IntermodalTransport #Logistics #Ports #ContinuousLearning',
+  },
+  es: {
+    eyebrow:'Verificación oficial', title:'Verificación de certificados',
+    subtitle:'Comprueba en segundos que un certificado ha sido emitido por Escola Europea Intermodal Transport.',
+    label:'Código del certificado', verify:'Verificar', hint:'El código aparece impreso en el certificado:',
+    how1t:'Introduce el código', how1:'Escribe el código del certificado o escanea su QR.',
+    how2t:'Comprobación al instante', how2:'Lo contrastamos con nuestro registro oficial de certificados emitidos.',
+    how3t:'Compártelo', how3:'Añádelo a tu perfil de LinkedIn o compártelo con tu red.',
+    footer:'Registro oficial de certificados',
+    valid:'Certificado verificado', test:'Certificado de prueba — no emitido oficialmente',
+    awarded:'ha completado con éxito', course:'Curso', date:'Fecha', hours:'Horas', center:'Centro de formación',
+    country:'País', program:'Programa', code:'Código', issued:'Emitido',
+    download:'Descargar PDF', addLi:'Añadir a mi perfil de LinkedIn', shareLi:'Compartir en LinkedIn',
+    copyLink:'Copiar enlace de verificación', copyPost:'Copiar texto',
+    postTitle:'Tu publicación para LinkedIn (puedes editarla)', qrTitle:'Código QR',
+    qrHelp:'Escanéalo para verificar este certificado', qrDl:'Descargar QR',
+    notFound:'Certificado no encontrado',
+    notFoundTxt:'El código <b>{code}</b> no figura en nuestro registro. Comprueba que esté escrito exactamente como en el certificado. Si el problema continúa, contacta con nosotros en escolaeuropea.eu.',
+    badFormat:'Formato no válido', badFormatTxt:'Los códigos tienen este formato: <b>ESCOLA12345678EUROPEA</b>.',
+    netErr:'No hemos podido consultar el registro', netErrTxt:'Revisa tu conexión e inténtalo de nuevo en unos segundos.',
+    copied:'Copiado al portapapeles ✓', linkCopied:'Enlace de verificación copiado ✓',
+    liCopied:'Texto copiado — pégalo en LinkedIn si no aparece automáticamente',
+    hoursUnit:'h',
+    post:'🎓 Me complace compartir que he completado con éxito el programa {course}{hours} en {org}.\n\n{date}✅ Certificado verificado oficialmente: {link}\n\n¡Gracias a todo el equipo de Escola Europea por esta experiencia de aprendizaje!\n\n#EscolaEuropea #TransporteIntermodal #Logística #Puertos #FormaciónContinua',
+  },
+  ca: {
+    eyebrow:'Verificació oficial', title:'Verificació de certificats',
+    subtitle:'Comprova en segons que un certificat ha estat emès per l’Escola Europea Intermodal Transport.',
+    label:'Codi del certificat', verify:'Verificar', hint:'El codi apareix imprès al certificat:',
+    how1t:'Introdueix el codi', how1:'Escriu el codi del certificat o escaneja’n el QR.',
+    how2t:'Comprovació a l’instant', how2:'El contrastem amb el nostre registre oficial de certificats emesos.',
+    how3t:'Comparteix-lo', how3:'Afegeix-lo al teu perfil de LinkedIn o comparteix-lo amb la teva xarxa.',
+    footer:'Registre oficial de certificats',
+    valid:'Certificat verificat', test:'Certificat de prova — no emès oficialment',
+    awarded:'ha completat amb èxit', course:'Curs', date:'Data', hours:'Hores', center:'Centre de formació',
+    country:'País', program:'Programa', code:'Codi', issued:'Emès',
+    download:'Descarregar PDF', addLi:'Afegir al meu perfil de LinkedIn', shareLi:'Compartir a LinkedIn',
+    copyLink:'Copiar l’enllaç de verificació', copyPost:'Copiar text',
+    postTitle:'La teva publicació per a LinkedIn (la pots editar)', qrTitle:'Codi QR',
+    qrHelp:'Escaneja’l per verificar aquest certificat', qrDl:'Descarregar QR',
+    notFound:'Certificat no trobat',
+    notFoundTxt:'El codi <b>{code}</b> no consta al nostre registre. Comprova que estigui escrit exactament com al certificat. Si el problema continua, contacta’ns a escolaeuropea.eu.',
+    badFormat:'Format no vàlid', badFormatTxt:'Els codis tenen aquest format: <b>ESCOLA12345678EUROPEA</b>.',
+    netErr:'No hem pogut consultar el registre', netErrTxt:'Revisa la connexió i torna-ho a provar d’aquí a uns segons.',
+    copied:'Copiat al porta-retalls ✓', linkCopied:'Enllaç de verificació copiat ✓',
+    liCopied:'Text copiat — enganxa’l a LinkedIn si no apareix automàticament',
+    hoursUnit:'h',
+    post:'🎓 Estic molt content/a de compartir que he completat amb èxit el programa {course}{hours} a l’{org}.\n\n{date}✅ Certificat verificat oficialment: {link}\n\nGràcies a tot l’equip de l’Escola Europea per aquesta experiència d’aprenentatge!\n\n#EscolaEuropea #TransportIntermodal #Logística #Ports #FormacióContínua',
+  },
+};
+
+let lang = (() => {
+  try { const s = localStorage.getItem('ee_lang'); if (s && T[s]) return s; } catch (e) {}
+  const n = (navigator.language || 'en').slice(0, 2);
+  return T[n] ? n : 'en';
+})();
+let current = null;   // last verified certificate
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+const t = k => T[lang][k] || T.en[k] || k;
+
+function applyLang() {
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+  document.querySelectorAll('.lang button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
+  if (current) render(current);
+}
+document.querySelectorAll('.lang button').forEach(b => b.addEventListener('click', () => {
+  lang = b.dataset.lang;
+  try { localStorage.setItem('ee_lang', lang); } catch (e) {}
+  applyLang();
+}));
+
+function toast(msg) {
+  const el = $('#toast'); el.textContent = msg; el.classList.add('show');
+  clearTimeout(toast._t); toast._t = setTimeout(() => el.classList.remove('show'), 3200);
+}
+async function copy(text, msg) {
+  try { await navigator.clipboard.writeText(text); }
+  catch (e) { const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
+  toast(msg || t('copied'));
+}
+
+const PUBLIC_VERIFY_URL = 'https://portvirtuallab.github.io/certificados/verify/';
+function verifyLink(code) {
+  return PUBLIC_VERIFY_URL + '?code=' + encodeURIComponent(code);
+}
+function prettyDate(iso) {
+  const m = String(iso || '').match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!m) return iso || '';
+  const d = new Date(+m[1], +m[2] - 1, +m[3]);
+  return d.toLocaleDateString(lang === 'ca' ? 'ca-ES' : lang, { day: 'numeric', month: 'long', year: 'numeric' });
+}
+function courseTitle(c) { return c.courseName || c.course; }
+
+function postText(c) {
+  return t('post')
+    .replace('{course}', courseTitle(c))
+    .replace('{hours}', c.hours ? ' (' + c.hours + ' ' + (lang === 'en' ? 'hours' : lang === 'es' ? 'horas' : 'hores') + ')' : '')
+    .replace('{org}', ORG)
+    .replace('{date}', c.date ? '📅 ' + prettyDate(c.date) + '\n' : '')
+    .replace('{link}', verifyLink(c.code));
+}
+
+/** LinkedIn "Add licence or certification" deep link (pre-fills the form). */
+function linkedInAddUrl(c) {
+  const m = String(c.date || '').match(/^(\d{4})-(\d{2})/);
+  const p = new URLSearchParams({
+    startTask: 'CERTIFICATION_NAME',
+    name: courseTitle(c),
+    organizationName: ORG,
+    certId: c.code,
+    certUrl: verifyLink(c.code),
+  });
+  if (m) { p.set('issueYear', m[1]); p.set('issueMonth', String(+m[2])); }
+  return 'https://www.linkedin.com/profile/add?' + p.toString();
+}
+
+function skeleton() {
+  $('#result').innerHTML = '<div class="state skel"><div class="sk" style="width:35%"></div><div class="sk" style="width:70%;height:22px"></div><div class="sk" style="width:55%"></div><div class="sk" style="width:90%;margin-top:20px"></div><div class="sk" style="width:80%"></div></div>';
+}
+function showMessage(title, html) {
+  current = null;
+  $('#result').innerHTML = '<div class="state msg err"><div class="ico">✕</div><div><h2>' + esc(title) + '</h2><p>' + html + '</p></div></div>';
+}
+
+function render(c) {
+  const isTest = c.isTest;
+  const full = [c.name, c.lastName].filter(Boolean).join(' ');
+  const rows = [
+    [t('program'), courseTitle(c) !== c.course ? courseTitle(c) : ''],
+    [t('course'), c.course],
+    [t('date'), prettyDate(c.date)],
+    [t('hours'), c.hours ? c.hours + ' ' + t('hoursUnit') : ''],
+    [t('center'), c.center],
+    [t('country'), c.country],
+  ].filter(r => r[1]);
+
+  $('#result').innerHTML = `
+  <article class="state">
+    <div class="cert-head ${isTest ? 'test' : ''}">
+      <div class="seal" aria-hidden="true"><svg viewBox="0 0 24 24"><path class="check" d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+      <div>
+        <span class="badge">${isTest ? '⚠ ' + esc(t('test')) : '✓ ' + esc(t('valid'))}</span>
+        <div class="cert-name">${esc(full)}</div>
+        <div class="cert-course">${esc(t('awarded'))} · <b>${esc(courseTitle(c))}</b></div>
+        <span class="cert-code">${esc(c.code)}</span>
+      </div>
+    </div>
+    <dl class="details">${rows.map(r => `<div class="detail"><dt>${esc(r[0])}</dt><dd>${esc(r[1])}</dd></div>`).join('')}</dl>
+    <div class="actions">
+      ${c.url ? `<a class="btn btn-sm btn-ghost" href="${esc(c.url)}" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 3v12m0 0-4-4m4 4 4-4M5 21h14"/></svg>${esc(t('download'))}</a>` : ''}
+      ${isTest ? '' : `
+      <a class="btn btn-sm btn-li" href="${esc(linkedInAddUrl(c))}" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>${esc(t('addLi'))}</a>
+      <button class="btn btn-sm btn-li-outline" type="button" id="shareLi">${esc(t('shareLi'))}</button>`}
+      <button class="btn btn-sm btn-ghost" type="button" id="copyLink">🔗 ${esc(t('copyLink'))}</button>
+    </div>
+    ${isTest ? '' : `
+    <div class="share">
+      <div>
+        <h3>${esc(t('postTitle'))}</h3>
+        <textarea class="post" id="post" aria-label="${esc(t('postTitle'))}">${esc(postText(c))}</textarea>
+        <div class="post-actions">
+          <button class="btn btn-sm btn-li" type="button" id="shareLi2">${esc(t('shareLi'))}</button>
+          <button class="btn btn-sm btn-ghost" type="button" id="copyPost">📋 ${esc(t('copyPost'))}</button>
+        </div>
+      </div>
+      <div class="qr-box">
+        <h3>${esc(t('qrTitle'))}</h3>
+        <div id="qr" role="img" aria-label="${esc(t('qrHelp'))}"></div>
+        <small>${esc(t('qrHelp'))}</small>
+        <button class="btn btn-sm btn-ghost" type="button" id="qrDl">⬇ ${esc(t('qrDl'))}</button>
+      </div>
+    </div>`}
+  </article>`;
+
+  $('#copyLink').onclick = () => copy(verifyLink(c.code), t('linkCopied'));
+  if (!isTest) {
+    const share = async () => {
+      const text = $('#post').value;
+      await copy(text, t('liCopied'));
+      window.open('https://www.linkedin.com/feed/?shareActive=true&text=' + encodeURIComponent(text), '_blank', 'noopener');
+    };
+    $('#shareLi').onclick = share;
+    $('#shareLi2').onclick = share;
+    $('#copyPost').onclick = () => copy($('#post').value);
+    drawQr(verifyLink(c.code));
+    $('#qrDl').onclick = () => {
+      const canvas = $('#qr canvas'); const img = $('#qr img');
+      const src = canvas ? canvas.toDataURL('image/png') : (img && img.src);
+      if (!src) return;
+      const a = document.createElement('a'); a.href = src; a.download = 'QR_' + c.code + '.png'; a.click();
+    };
+  }
+}
+
+function drawQr(text, tries) {
+  const box = $('#qr'); if (!box) return;
+  if (typeof QRCode === 'undefined') { if ((tries || 0) < 40) setTimeout(() => drawQr(text, (tries || 0) + 1), 150); return; }
+  box.innerHTML = '';
+  try {
+    new QRCode(box, { text, width: 264, height: 264, colorDark: '#06224d', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
+  } catch (e) {
+    box.closest('.qr-box').style.display = 'none';   // never let the QR break the page
+  }
+}
+
+async function verify(raw, push) {
+  const code = String(raw || '').toUpperCase().replace(/[\s\-_.]+(?=\d|EUROPEA)/g, '').replace(/\s+/g, '').trim();
+  $('#code').value = code;
+  if (!code) return;
+  if (!CODE_RE.test(code)) { showMessage(t('badFormat'), t('badFormatTxt')); return; }
+  if (push) history.replaceState(null, '', '?code=' + encodeURIComponent(code));
+  $('#go').disabled = true; skeleton();
+  try {
+    const r = await fetch(API_URL, {
+      method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ fn: 'verifyCertificate', args: [code] }),
+    }).then(x => x.json());
+    const res = r && r.ok ? r.result : null;
+    if (res && res.valid) {
+      current = Object.assign({}, res.certificate, { isTest: !!res.isTest });
+    } else {
+      showMessage(t('notFound'), t('notFoundTxt').replace('{code}', esc(code)));
+      return;
+    }
+  } catch (e) {
+    showMessage(t('netErr'), esc(t('netErrTxt')));
+    return;
+  } finally {
+    $('#go').disabled = false;
+  }
+  render(current);
+  $('#how').style.display = 'none';
+}
+
+$('#form').addEventListener('submit', e => { e.preventDefault(); verify($('#code').value, true); });
+$('#year').textContent = new Date().getFullYear();
+applyLang();
+const initial = new URLSearchParams(location.search).get('code');
+if (initial) verify(initial, false); else $('#code').focus();
+</script>
+</body>
+</html>
