@@ -459,6 +459,29 @@ function drawQr(text, tries) {
   }
 }
 
+/** POST to the Apps Script API with a timeout and automatic retries (Google is occasionally slow). */
+async function callApi(fn, args) {
+  let lastErr;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 20000);
+    try {
+      const resp = await fetch(API_URL, {
+        method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ fn, args }), signal: ctrl.signal,
+      });
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      return await resp.json();
+    } catch (e) {
+      lastErr = e;
+      await new Promise(r => setTimeout(r, 1200 * (attempt + 1)));
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+  throw lastErr;
+}
+
 async function verify(raw, push) {
   const code = String(raw || '').toUpperCase().replace(/[\s\-_.]+(?=\d|EUROPEA)/g, '').replace(/\s+/g, '').trim();
   $('#code').value = code;
@@ -467,10 +490,7 @@ async function verify(raw, push) {
   if (push) history.replaceState(null, '', '?code=' + encodeURIComponent(code));
   $('#go').disabled = true; skeleton();
   try {
-    const r = await fetch(API_URL, {
-      method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ fn: 'verifyCertificate', args: [code] }),
-    }).then(x => x.json());
+    const r = await callApi('verifyCertificate', [code]);
     const res = r && r.ok ? r.result : null;
     if (res && res.valid) {
       current = Object.assign({}, res.certificate, { isTest: !!res.isTest });
