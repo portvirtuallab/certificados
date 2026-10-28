@@ -3,26 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Certificate Verification — Escola Europea Intermodal Transport</title>
-<meta name="description" content="Verify the authenticity of certificates issued by Escola Europea Intermodal Transport.">
-<meta property="og:title" content="Certificate Verification — Escola Europea Intermodal Transport">
-<meta property="og:description" content="Verify the authenticity of certificates issued by Escola Europea Intermodal Transport.">
+<title>Certificate Verification — Escola Europea – Intermodal Transport</title>
+<meta name="description" content="Verify the authenticity of certificates issued by Escola Europea – Intermodal Transport.">
+<meta property="og:title" content="Certificate Verification — Escola Europea – Intermodal Transport">
+<meta property="og:description" content="Verify the authenticity of certificates issued by Escola Europea – Intermodal Transport.">
 <meta property="og:image" content="https://portvirtuallab.github.io/certificados/assets/escola-logo-white-bg.png">
 <meta property="og:type" content="website">
-<meta name="theme-color" content="#034DA2">
+<meta name="theme-color" content="#004C99">
 <link rel="icon" type="image/png" href="../assets/escola-logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --brand:#034DA2; --brand-2:#0a63c9; --navy:#06224d;
+  --brand:#004C99; --brand-2:#007CC3; --navy:#004C99;
   --ok:#0f9d6b; --ok-bg:#e7f8f1; --ok-bd:#9fe3c8;
   --warn:#a15c00; --warn-bg:#fff6e5; --warn-bd:#ffd48a;
   --err:#c62828; --err-bg:#fdecec; --err-bd:#f5b5b5;
   --bg:#f3f6fb; --card:#ffffff; --ink:#0f1b2d; --mu:#5b6b82; --line:#e3e9f2; --chip:#eef3fb;
-  --shadow:0 20px 60px -20px rgba(3,77,162,.28), 0 2px 8px rgba(15,27,45,.06);
-  --rainbow:linear-gradient(90deg,#c62828,#e8457c,#f39c12,#f6c90e,#2e9d4f,#1aa3b8,#034DA2);
+  --shadow:0 20px 60px -20px rgba(0,76,153,.28), 0 2px 8px rgba(15,27,45,.06);
 }
 @media (prefers-color-scheme:dark){
   :root{
@@ -33,13 +32,11 @@
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%}
-body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;
+body{font-family:'Open Sans',system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;
   display:flex;flex-direction:column;overflow-x:hidden}
 a{color:inherit}
-.hero{position:relative;background:radial-gradient(1200px 500px at 15% -10%,#0a63c9 0%,transparent 60%),
-  radial-gradient(900px 400px at 100% 0%,#0b3f86 0%,transparent 55%),var(--navy);
+.hero{position:relative;background:var(--brand);
   color:#fff;padding:22px 16px 120px;overflow:hidden}
-.hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:5px;background:var(--rainbow)}
 .hero .stars{position:absolute;inset:0;pointer-events:none;opacity:.12;
   background-image:radial-gradient(circle at 20% 30%,#fff 1.5px,transparent 2px),radial-gradient(circle at 70% 20%,#fff 1.5px,transparent 2px),
   radial-gradient(circle at 85% 60%,#fff 1.2px,transparent 2px),radial-gradient(circle at 40% 70%,#fff 1px,transparent 2px);
@@ -52,7 +49,7 @@ a{color:inherit}
 .brand-txt b{display:block;font-size:.95rem;font-weight:800;letter-spacing:.01em}
 .brand-txt span{display:block;font-size:.72rem;opacity:.75;font-weight:500}
 .lang{display:flex;background:rgba(255,255,255,.12);border-radius:999px;padding:3px;backdrop-filter:blur(6px)}
-.lang button{border:0;background:transparent;color:#fff;font:600 .72rem 'Plus Jakarta Sans',sans-serif;
+.lang button{border:0;background:transparent;color:#fff;font:700 .72rem 'Montserrat',sans-serif;
   padding:6px 10px;border-radius:999px;cursor:pointer;opacity:.8}
 .lang button[aria-pressed="true"]{background:#fff;color:var(--brand);opacity:1}
 .hero-copy{max-width:880px;margin:44px auto 0;position:relative;z-index:1}
@@ -71,12 +68,12 @@ main{flex:1;max-width:880px;width:100%;margin:-84px auto 0;padding:0 16px 48px;p
   font:600 1.05rem 'JetBrains Mono',monospace;letter-spacing:.06em;text-transform:uppercase;padding:0 16px 0 48px;outline:none;
   transition:border-color .2s,box-shadow .2s,background .2s}
 #code::placeholder{color:var(--mu);opacity:.6;letter-spacing:.04em}
-#code:focus{border-color:var(--brand-2);box-shadow:0 0 0 5px rgba(10,99,201,.15);background:var(--card)}
+#code:focus{border-color:var(--brand-2);box-shadow:0 0 0 5px rgba(0,124,195,.15);background:var(--card)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:58px;padding:0 24px;border:0;border-radius:16px;
-  font:700 .95rem 'Plus Jakarta Sans',sans-serif;cursor:pointer;text-decoration:none;transition:transform .12s,filter .2s,background .2s;white-space:nowrap}
+  font:700 .95rem 'Montserrat',sans-serif;cursor:pointer;text-decoration:none;transition:transform .12s,filter .2s,background .2s;white-space:nowrap}
 .btn:active{transform:scale(.98)}
-.btn-primary{background:linear-gradient(135deg,var(--brand-2),var(--brand));color:#fff;box-shadow:0 8px 20px -6px rgba(3,77,162,.6)}
-.btn-primary:hover{filter:brightness(1.08)}
+.btn-primary{background:var(--brand);color:#fff;box-shadow:0 8px 20px -6px rgba(0,76,153,.55)}
+.btn-primary:hover{background:#003d7a}
 .btn-primary:disabled{opacity:.6;cursor:wait}
 .hint{margin-top:12px;font-size:.8rem;color:var(--mu)}
 .hint code{font-family:'JetBrains Mono',monospace;background:var(--chip);padding:2px 6px;border-radius:6px;color:var(--ink)}
@@ -87,18 +84,16 @@ main{flex:1;max-width:880px;width:100%;margin:-84px auto 0;padding:0 16px 48px;p
 @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 
 /* valid */
-.cert-head{position:relative;padding:28px 26px 24px;background:linear-gradient(135deg,var(--ok-bg),var(--card));border-bottom:1px solid var(--line);
+.cert-head{position:relative;padding:28px 26px 24px;background:var(--chip);border-bottom:1px solid var(--line);
   display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center}
 .cert-head.test{background:linear-gradient(135deg,var(--warn-bg),var(--card))}
 .seal{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;position:relative;
-  background:conic-gradient(from 0deg,#c62828,#e8457c,#f39c12,#f6c90e,#2e9d4f,#1aa3b8,#034DA2,#c62828);animation:spin 8s linear infinite}
+  background:var(--brand)}
 .seal::before{content:"";position:absolute;inset:5px;border-radius:50%;background:var(--card)}
 .seal svg{position:relative;width:38px;height:38px}
-.seal .check{stroke:var(--ok);stroke-width:3.2;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:40;stroke-dashoffset:40;animation:draw .7s .25s ease forwards}
-.test .seal{background:conic-gradient(#f39c12,#f6c90e,#f39c12)}
+.seal .check{stroke:var(--brand);stroke-width:3.2;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:40;stroke-dashoffset:40;animation:draw .7s .25s ease forwards}
+.test .seal{background:var(--warn)}
 .test .seal .check{stroke:var(--warn)}
-@keyframes spin{to{transform:rotate(360deg)}}
-.seal svg{animation:spin 8s linear infinite reverse}
 @keyframes draw{to{stroke-dashoffset:0}}
 .badge{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
   padding:5px 10px;border-radius:999px;background:var(--ok);color:#fff}
@@ -127,13 +122,16 @@ main{flex:1;max-width:880px;width:100%;margin:-84px auto 0;padding:0 16px 48px;p
 @media (max-width:680px){.share{grid-template-columns:1fr}}
 .share h3{font-size:.8rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--mu);margin-bottom:10px}
 .post{width:100%;min-height:190px;resize:vertical;border:1.5px solid var(--line);border-radius:14px;background:var(--bg);color:var(--ink);
-  padding:14px;font:500 .9rem/1.55 'Plus Jakarta Sans',sans-serif;outline:none}
+  padding:14px;font:400 .9rem/1.55 'Open Sans',sans-serif;outline:none}
 .post:focus{border-color:var(--brand-2)}
 .post-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
 .qr-box{display:flex;flex-direction:column;align-items:center;gap:10px}
 #qr{background:#fff;padding:12px;border-radius:14px;border:1px solid var(--line);width:156px;height:156px}
 #qr img,#qr canvas{width:132px!important;height:132px!important}
 .qr-box small{color:var(--mu);font-size:.75rem;text-align:center;max-width:160px}
+
+/* Montserrat for titles and labels */
+.brand-txt b,.eyebrow,.hero h1,.search label,.badge,.cert-name,.detail dt,.share h3,.msg h2,.how b{font-family:'Montserrat',sans-serif}
 
 /* not found / error */
 .msg{padding:30px 26px;display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:start}
@@ -153,11 +151,14 @@ main{flex:1;max-width:880px;width:100%;margin:-84px auto 0;padding:0 16px 48px;p
 .how div{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px}
 .how b{display:block;font-size:.92rem;margin:8px 0 4px}
 .how p{color:var(--mu);font-size:.84rem;line-height:1.5}
-.how i{font-style:normal;font-size:1.3rem}
+.how i{display:inline-grid;place-items:center;width:38px;height:38px;border-radius:10px;background:var(--chip);color:var(--brand-2)}
+.how i svg,.ico-line{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.btn-ghost .ico-line{color:var(--brand-2)}
+.eyebrow .ico-line{width:14px;height:14px}
 
 footer{text-align:center;padding:26px 16px 34px;color:var(--mu);font-size:.8rem;line-height:1.8}
-footer a{color:var(--brand-2);font-weight:600;text-decoration:none}
-@media (prefers-color-scheme:dark){footer a{color:#70b5f9}}
+footer a{color:var(--brand);font-weight:600;text-decoration:none}
+@media (prefers-color-scheme:dark){footer a{color:#5fb3e6}}
 
 .toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,120%);background:var(--ink);color:var(--card);
   padding:12px 18px;border-radius:12px;font-weight:600;font-size:.88rem;box-shadow:var(--shadow);transition:transform .3s,opacity .3s;z-index:50;max-width:calc(100% - 32px);
@@ -182,7 +183,7 @@ footer a{color:var(--brand-2);font-weight:600;text-decoration:none}
     </div>
   </div>
   <div class="hero-copy">
-    <span class="eyebrow">🔒 <span data-i18n="eyebrow">Official verification</span></span>
+    <span class="eyebrow"><svg class="ico-line" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg> <span data-i18n="eyebrow">Official verification</span></span>
     <h1 data-i18n="title">Certificate Verification</h1>
     <p data-i18n="subtitle">Check in seconds that a certificate was genuinely issued by Escola Europea Intermodal Transport.</p>
   </div>
@@ -207,14 +208,14 @@ footer a{color:var(--brand-2);font-weight:600;text-decoration:none}
   <section id="result" aria-live="polite"></section>
 
   <section class="how" id="how">
-    <div><i>🔎</i><b data-i18n="how1t">Enter the code</b><p data-i18n="how1">Type the code shown on the certificate or scan its QR.</p></div>
-    <div><i>✅</i><b data-i18n="how2t">Instant check</b><p data-i18n="how2">We confirm it against our official register of issued certificates.</p></div>
-    <div><i>💼</i><b data-i18n="how3t">Share it</b><p data-i18n="how3">Add it to your LinkedIn profile or share the news with your network.</p></div>
+    <div><i aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></i><b data-i18n="how1t">Enter the code</b><p data-i18n="how1">Type the code shown on the certificate or scan its QR.</p></div>
+    <div><i aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3z"/><path d="m9 12 2 2 4-4"/></svg></i><b data-i18n="how2t">Instant check</b><p data-i18n="how2">We confirm it against our official register of issued certificates.</p></div>
+    <div><i aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/></svg></i><b data-i18n="how3t">Share it</b><p data-i18n="how3">Add it to your LinkedIn profile or share the news with your network.</p></div>
   </section>
 </main>
 
 <footer>
-  © <span id="year"></span> Escola Europea Intermodal Transport · <a href="https://escolaeuropea.eu" target="_blank" rel="noopener">escolaeuropea.eu</a><br>
+  © <span id="year"></span> Escola Europea – Intermodal Transport · <a href="https://escolaeuropea.eu" target="_blank" rel="noopener">escolaeuropea.eu</a><br>
   <span data-i18n="footer">Official certificate register</span>
 </footer>
 <div class="toast" id="toast" role="status"></div>
@@ -222,7 +223,7 @@ footer a{color:var(--brand-2);font-weight:600;text-decoration:none}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycbyyupjWX7gBBPMDlUx9Ak0tIC84H1VH3_iiuot7kVdXoysPvWbOXh4deNgsVOvGmi4IKA/exec';
-const ORG = 'Escola Europea Intermodal Transport';
+const ORG = 'Escola Europea – Intermodal Transport';
 const CODE_RE = /^(TEST-)?ESCOLA\d{8}EUROPEA$/;
 
 const T = {
@@ -248,7 +249,7 @@ const T = {
     copied:'Copied to clipboard ✓', linkCopied:'Verification link copied ✓',
     liCopied:'Post text copied — paste it in LinkedIn if it does not appear automatically',
     hoursUnit:'h',
-    post:'🎓 I am proud to share that I have successfully completed the {course} programme{hours} at {org}.\n\n{date}✅ Officially verified certificate: {link}\n\nThank you to the whole team at Escola Europea for this learning experience!\n\n#EscolaEuropea #IntermodalTransport #Logistics #Ports #ContinuousLearning',
+    post:'🎓 I am proud to share that I have successfully completed the {course} programme{hours} at {org} @escolaeuropeaeu.\n\n{date}✅ Officially verified certificate: {link}\n\nThank you to the whole team at Escola Europea for this learning experience!\n\n#EscolaEuropea #PortVirtualLab #IntermodalTransport #Logistics #Ports #ContinuousLearning',
   },
   es: {
     eyebrow:'Verificación oficial', title:'Verificación de certificados',
@@ -272,7 +273,7 @@ const T = {
     copied:'Copiado al portapapeles ✓', linkCopied:'Enlace de verificación copiado ✓',
     liCopied:'Texto copiado — pégalo en LinkedIn si no aparece automáticamente',
     hoursUnit:'h',
-    post:'🎓 Me complace compartir que he completado con éxito el programa {course}{hours} en {org}.\n\n{date}✅ Certificado verificado oficialmente: {link}\n\n¡Gracias a todo el equipo de Escola Europea por esta experiencia de aprendizaje!\n\n#EscolaEuropea #TransporteIntermodal #Logística #Puertos #FormaciónContinua',
+    post:'🎓 Me complace compartir que he completado con éxito el programa {course}{hours} en {org} @escolaeuropeaeu.\n\n{date}✅ Certificado verificado oficialmente: {link}\n\n¡Gracias a todo el equipo de Escola Europea por esta experiencia de aprendizaje!\n\n#EscolaEuropea #PortVirtualLab #TransporteIntermodal #Logística #Puertos #FormaciónContinua',
   },
   ca: {
     eyebrow:'Verificació oficial', title:'Verificació de certificats',
@@ -296,7 +297,7 @@ const T = {
     copied:'Copiat al porta-retalls ✓', linkCopied:'Enllaç de verificació copiat ✓',
     liCopied:'Text copiat — enganxa’l a LinkedIn si no apareix automàticament',
     hoursUnit:'h',
-    post:'🎓 Estic molt content/a de compartir que he completat amb èxit el programa {course}{hours} a l’{org}.\n\n{date}✅ Certificat verificat oficialment: {link}\n\nGràcies a tot l’equip de l’Escola Europea per aquesta experiència d’aprenentatge!\n\n#EscolaEuropea #TransportIntermodal #Logística #Ports #FormacióContínua',
+    post:'🎓 Estic molt content/a de compartir que he completat amb èxit el programa {course}{hours} a l’{org} @escolaeuropeaeu.\n\n{date}✅ Certificat verificat oficialment: {link}\n\nGràcies a tot l’equip de l’Escola Europea per aquesta experiència d’aprenentatge!\n\n#EscolaEuropea #PortVirtualLab #TransportIntermodal #Logística #Ports #FormacióContínua',
   },
 };
 
@@ -308,6 +309,11 @@ let lang = (() => {
 let current = null;   // last verified certificate
 
 const $ = s => document.querySelector(s);
+const ICO = {
+  link: '<svg class="ico-line" viewBox="0 0 24 24"><path d="M10 14a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1 1"/><path d="M14 10a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1-1"/></svg>',
+  copy: '<svg class="ico-line" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>',
+  download: '<svg class="ico-line" viewBox="0 0 24 24"><path d="M12 3v12m0 0-4-4m4 4 4-4M5 21h14"/></svg>',
+};
 const esc = s => String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 const t = k => T[lang][k] || T.en[k] || k;
 
@@ -341,7 +347,7 @@ function prettyDate(iso) {
   const m = String(iso || '').match(/^(\d{4})-(\d{2})-(\d{2})/);
   if (!m) return iso || '';
   const d = new Date(+m[1], +m[2] - 1, +m[3]);
-  return d.toLocaleDateString(lang === 'ca' ? 'ca-ES' : lang, { day: 'numeric', month: 'long', year: 'numeric' });
+  return d.toLocaleDateString(lang === 'ca' ? 'ca-ES' : lang === 'en' ? 'en-GB' : lang, { day: 'numeric', month: 'long', year: 'numeric' });
 }
 function courseTitle(c) { return c.courseName || c.course; }
 
@@ -402,12 +408,12 @@ function render(c) {
     <dl class="details">${rows.map(r => `<div class="detail"><dt>${esc(r[0])}</dt><dd>${esc(r[1])}</dd></div>`).join('')}</dl>
     <div class="actions">
       ${c.url ? `<a class="btn btn-sm btn-ghost" href="${esc(c.url)}" target="_blank" rel="noopener">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 3v12m0 0-4-4m4 4 4-4M5 21h14"/></svg>${esc(t('download'))}</a>` : ''}
+        ${ICO.download}${esc(t('download'))}</a>` : ''}
       ${isTest ? '' : `
       <a class="btn btn-sm btn-li" href="${esc(linkedInAddUrl(c))}" target="_blank" rel="noopener">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>${esc(t('addLi'))}</a>
       <button class="btn btn-sm btn-li-outline" type="button" id="shareLi">${esc(t('shareLi'))}</button>`}
-      <button class="btn btn-sm btn-ghost" type="button" id="copyLink">🔗 ${esc(t('copyLink'))}</button>
+      <button class="btn btn-sm btn-ghost" type="button" id="copyLink">${ICO.link}${esc(t('copyLink'))}</button>
     </div>
     ${isTest ? '' : `
     <div class="share">
@@ -416,14 +422,14 @@ function render(c) {
         <textarea class="post" id="post" aria-label="${esc(t('postTitle'))}">${esc(postText(c))}</textarea>
         <div class="post-actions">
           <button class="btn btn-sm btn-li" type="button" id="shareLi2">${esc(t('shareLi'))}</button>
-          <button class="btn btn-sm btn-ghost" type="button" id="copyPost">📋 ${esc(t('copyPost'))}</button>
+          <button class="btn btn-sm btn-ghost" type="button" id="copyPost">${ICO.copy}${esc(t('copyPost'))}</button>
         </div>
       </div>
       <div class="qr-box">
         <h3>${esc(t('qrTitle'))}</h3>
         <div id="qr" role="img" aria-label="${esc(t('qrHelp'))}"></div>
         <small>${esc(t('qrHelp'))}</small>
-        <button class="btn btn-sm btn-ghost" type="button" id="qrDl">⬇ ${esc(t('qrDl'))}</button>
+        <button class="btn btn-sm btn-ghost" type="button" id="qrDl">${ICO.download}${esc(t('qrDl'))}</button>
       </div>
     </div>`}
   </article>`;
