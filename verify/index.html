@@ -48,10 +48,10 @@ a{color:inherit}
 .brand-badge img{width:46px;height:46px;object-fit:contain}
 .brand-txt b{display:block;font-size:.95rem;font-weight:800;letter-spacing:.01em}
 .brand-txt span{display:block;font-size:.72rem;opacity:.75;font-weight:500}
-.lang{display:flex;background:rgba(255,255,255,.12);border-radius:999px;padding:3px;backdrop-filter:blur(6px)}
-.lang button{border:0;background:transparent;color:#fff;font:700 .72rem 'Montserrat',sans-serif;
-  padding:6px 10px;border-radius:999px;cursor:pointer;opacity:.8}
-.lang button[aria-pressed="true"]{background:#fff;color:var(--brand);opacity:1}
+.back{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:999px;border:1.5px solid rgba(255,255,255,.6);
+  color:#fff;text-decoration:none;font:700 .82rem 'Montserrat',sans-serif;white-space:nowrap;transition:background .2s,color .2s}
+.back:hover{background:#fff;color:var(--brand)}
+@media (max-width:480px){.back{padding:8px 12px;font-size:.76rem}}
 .hero-copy{max-width:880px;margin:44px auto 0;position:relative;z-index:1}
 .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:700;letter-spacing:.14em;
   text-transform:uppercase;background:rgba(255,255,255,.12);padding:6px 12px;border-radius:999px}
@@ -130,8 +130,17 @@ main{flex:1;max-width:880px;width:100%;margin:-84px auto 0;padding:0 16px 48px;p
 #qr img,#qr canvas{width:132px!important;height:132px!important}
 .qr-box small{color:var(--mu);font-size:.75rem;text-align:center;max-width:160px}
 
+.nocode{margin-top:22px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:var(--card);border:1px solid var(--line);
+  border-left:4px solid var(--brand-2);border-radius:18px;padding:18px 20px}
+.nocode i{display:inline-grid;place-items:center;width:38px;height:38px;border-radius:10px;background:var(--chip);color:var(--brand-2);flex-shrink:0}
+.nocode i svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.nocode div{flex:1;min-width:220px}
+.nocode b{display:block;font-size:.95rem;margin-bottom:2px}
+.nocode p{color:var(--mu);font-size:.86rem;line-height:1.5}
+.nocode .btn{flex-shrink:0}
+
 /* Montserrat for titles and labels */
-.brand-txt b,.eyebrow,.hero h1,.search label,.badge,.cert-name,.detail dt,.share h3,.msg h2,.how b{font-family:'Montserrat',sans-serif}
+.brand-txt b,.eyebrow,.hero h1,.nocode b,.search label,.badge,.cert-name,.detail dt,.share h3,.msg h2,.how b{font-family:'Montserrat',sans-serif}
 
 /* not found / error */
 .msg{padding:30px 26px;display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:start}
@@ -173,11 +182,7 @@ main{flex:1;max-width:880px;width:100%;margin:-84px auto 0;padding:0 16px 48px;p
       <span class="brand-badge"><img src="../assets/escola-logo.png" alt="Escola Europea Intermodal Transport — 20 years"></span>
       <span class="brand-txt"><b>Escola Europea</b><span>Intermodal Transport</span></span>
     </a>
-    <div class="lang" role="group" aria-label="Language">
-      <button type="button" data-lang="en">EN</button>
-      <button type="button" data-lang="es">ES</button>
-      <button type="button" data-lang="ca">CA</button>
-    </div>
+    <a class="back" href="https://escolaeuropea.eu/"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5m6-6-6 6 6 6"/></svg>Back to Escola Europea</a>
   </div>
   <div class="hero-copy">
     <span class="eyebrow"><svg class="ico-line" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg> <span data-i18n="eyebrow">Official verification</span></span>
@@ -203,6 +208,15 @@ main{flex:1;max-width:880px;width:100%;margin:-84px auto 0;padding:0 16px 48px;p
   </form>
 
   <section id="result" aria-live="polite"></section>
+
+  <aside class="nocode">
+    <i aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg></i>
+    <div>
+      <b>Don’t have your certificate code?</b>
+      <p>Contact Escola Europea and we will generate it for you. Online verification is currently available for certificates issued in 2026.</p>
+    </div>
+    <a class="btn btn-sm btn-ghost" href="https://escolaeuropea.eu/contact-us/">Contact us</a>
+  </aside>
 
   <section class="how" id="how">
     <div><i aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></i><b data-i18n="how1t">Enter the code</b><p data-i18n="how1">Type the code shown on the certificate or scan its QR.</p></div>
@@ -275,7 +289,7 @@ const T = {
     postTitle:'Your LinkedIn post (you can edit it)', qrTitle:'QR code',
     qrHelp:'Scan to verify this certificate', qrDl:'Download QR',
     notFound:'Certificate not found',
-    notFoundTxt:'The code <b>{code}</b> is not in our register. Check that it is typed exactly as on the certificate. If the problem persists, contact us at escolaeuropea.eu.',
+    notFoundTxt:'The code <b>{code}</b> is not in our register. Check that it is typed exactly as on the certificate. If you need help, <a href="https://escolaeuropea.eu/contact-us/" style="color:inherit;font-weight:700">contact us</a>.',
     badFormat:'Invalid format', badFormatTxt:'Codes look like <b>ESCOLA12345678EUROPEA</b>.',
     netErr:'We could not reach the register', netErrTxt:'Please check your connection and try again in a moment.',
     copied:'Copied to clipboard ✓', linkCopied:'Verification link copied ✓',
@@ -283,61 +297,9 @@ const T = {
     hoursUnit:'h',
     post:'🎓 I am proud to share that I have successfully completed the {course} programme{hours} at {org} @escolaeuropeaeu.\n\n{date}✅ Officially verified certificate: {link}\n\nThank you to the whole team at Escola Europea for this learning experience!\n\n#EscolaEuropea #PortVirtualLab #IntermodalTransport #Logistics #Ports #ContinuousLearning',
   },
-  es: {
-    eyebrow:'Verificación oficial', title:'Verificación de certificados',
-    subtitle:'Comprueba en segundos que un certificado ha sido emitido por Escola Europea Intermodal Transport.',
-    label:'Código del certificado', verify:'Verificar', hint:'El código aparece impreso en el certificado:',
-    how1t:'Introduce el código', how1:'Escribe el código del certificado o escanea su QR.',
-    how2t:'Comprobación al instante', how2:'Lo contrastamos con nuestro registro oficial de certificados emitidos.',
-    how3t:'Compártelo', how3:'Añádelo a tu perfil de LinkedIn o compártelo con tu red.',
-    footer:'Registro oficial de certificados',
-    valid:'Certificado verificado', test:'Certificado de prueba — no emitido oficialmente',
-    awarded:'ha completado con éxito', course:'Curso', date:'Fecha', hours:'Horas', center:'Centro de formación',
-    country:'País', program:'Programa', code:'Código', issued:'Emitido',
-    download:'Descargar PDF', addLi:'Añadir a mi perfil de LinkedIn', shareLi:'Compartir en LinkedIn',
-    copyLink:'Copiar enlace de verificación', copyPost:'Copiar texto',
-    postTitle:'Tu publicación para LinkedIn (puedes editarla)', qrTitle:'Código QR',
-    qrHelp:'Escanéalo para verificar este certificado', qrDl:'Descargar QR',
-    notFound:'Certificado no encontrado',
-    notFoundTxt:'El código <b>{code}</b> no figura en nuestro registro. Comprueba que esté escrito exactamente como en el certificado. Si el problema continúa, contacta con nosotros en escolaeuropea.eu.',
-    badFormat:'Formato no válido', badFormatTxt:'Los códigos tienen este formato: <b>ESCOLA12345678EUROPEA</b>.',
-    netErr:'No hemos podido consultar el registro', netErrTxt:'Revisa tu conexión e inténtalo de nuevo en unos segundos.',
-    copied:'Copiado al portapapeles ✓', linkCopied:'Enlace de verificación copiado ✓',
-    liCopied:'Texto copiado — pégalo en LinkedIn si no aparece automáticamente',
-    hoursUnit:'h',
-    post:'🎓 Me complace compartir que he completado con éxito el programa {course}{hours} en {org} @escolaeuropeaeu.\n\n{date}✅ Certificado verificado oficialmente: {link}\n\n¡Gracias a todo el equipo de Escola Europea por esta experiencia de aprendizaje!\n\n#EscolaEuropea #PortVirtualLab #TransporteIntermodal #Logística #Puertos #FormaciónContinua',
-  },
-  ca: {
-    eyebrow:'Verificació oficial', title:'Verificació de certificats',
-    subtitle:'Comprova en segons que un certificat ha estat emès per l’Escola Europea Intermodal Transport.',
-    label:'Codi del certificat', verify:'Verificar', hint:'El codi apareix imprès al certificat:',
-    how1t:'Introdueix el codi', how1:'Escriu el codi del certificat o escaneja’n el QR.',
-    how2t:'Comprovació a l’instant', how2:'El contrastem amb el nostre registre oficial de certificats emesos.',
-    how3t:'Comparteix-lo', how3:'Afegeix-lo al teu perfil de LinkedIn o comparteix-lo amb la teva xarxa.',
-    footer:'Registre oficial de certificats',
-    valid:'Certificat verificat', test:'Certificat de prova — no emès oficialment',
-    awarded:'ha completat amb èxit', course:'Curs', date:'Data', hours:'Hores', center:'Centre de formació',
-    country:'País', program:'Programa', code:'Codi', issued:'Emès',
-    download:'Descarregar PDF', addLi:'Afegir al meu perfil de LinkedIn', shareLi:'Compartir a LinkedIn',
-    copyLink:'Copiar l’enllaç de verificació', copyPost:'Copiar text',
-    postTitle:'La teva publicació per a LinkedIn (la pots editar)', qrTitle:'Codi QR',
-    qrHelp:'Escaneja’l per verificar aquest certificat', qrDl:'Descarregar QR',
-    notFound:'Certificat no trobat',
-    notFoundTxt:'El codi <b>{code}</b> no consta al nostre registre. Comprova que estigui escrit exactament com al certificat. Si el problema continua, contacta’ns a escolaeuropea.eu.',
-    badFormat:'Format no vàlid', badFormatTxt:'Els codis tenen aquest format: <b>ESCOLA12345678EUROPEA</b>.',
-    netErr:'No hem pogut consultar el registre', netErrTxt:'Revisa la connexió i torna-ho a provar d’aquí a uns segons.',
-    copied:'Copiat al porta-retalls ✓', linkCopied:'Enllaç de verificació copiat ✓',
-    liCopied:'Text copiat — enganxa’l a LinkedIn si no apareix automàticament',
-    hoursUnit:'h',
-    post:'🎓 Estic molt content/a de compartir que he completat amb èxit el programa {course}{hours} a l’{org} @escolaeuropeaeu.\n\n{date}✅ Certificat verificat oficialment: {link}\n\nGràcies a tot l’equip de l’Escola Europea per aquesta experiència d’aprenentatge!\n\n#EscolaEuropea #PortVirtualLab #TransportIntermodal #Logística #Ports #FormacióContínua',
-  },
 };
 
-let lang = (() => {
-  try { const s = localStorage.getItem('ee_lang'); if (s && T[s]) return s; } catch (e) {}
-  const n = (navigator.language || 'en').slice(0, 2);
-  return T[n] ? n : 'en';
-})();
+const lang = 'en';   // the Escola websites are English-only
 let current = null;   // last verified certificate
 
 const $ = s => document.querySelector(s);
@@ -352,14 +314,9 @@ const t = k => T[lang][k] || T.en[k] || k;
 function applyLang() {
   document.documentElement.lang = lang;
   document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
-  document.querySelectorAll('.lang button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
   if (current) render(current);
 }
-document.querySelectorAll('.lang button').forEach(b => b.addEventListener('click', () => {
-  lang = b.dataset.lang;
-  try { localStorage.setItem('ee_lang', lang); } catch (e) {}
-  applyLang();
-}));
+
 
 function toast(msg) {
   const el = $('#toast'); el.textContent = msg; el.classList.add('show');
